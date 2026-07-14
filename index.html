@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>?�師?�班?�表工具</title>
+<title>藥師值班班表工具</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Microsoft JhengHei', sans-serif; background: #f0f2f5; color: #333; padding: 20px; }
@@ -39,7 +39,6 @@ th, td { border: 1px solid #ddd; padding: 8px 10px; text-align: center; font-siz
 th { background: #2c3e50; color: white; position: sticky; top: 0; z-index: 1; }
 td { cursor: pointer; transition: background 0.15s; }
 td:hover { background: #e8f4fd; }
-td.editing { background: #fff3cd; }
 td.weekend { background: #fef9e7; }
 td.weekend:hover { background: #fdf2c7; }
 td.conflict { background: #fadbd8 !important; border: 2px solid #e74c3c; }
@@ -48,10 +47,6 @@ td.empty { color: #bbb; font-style: italic; }
 .shift-colors { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; justify-content: center; }
 .shift-color-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
 .shift-color-box { width: 18px; height: 18px; border-radius: 4px; border: 1px solid #999; }
-
-.legend { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 10px 0; font-size: 13px; color: #555; }
-.legend-item { display: flex; align-items: center; gap: 6px; }
-.legend-box { width: 16px; height: 16px; border-radius: 3px; border: 1px solid #999; }
 
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
 .modal-overlay.show { display: flex; }
@@ -62,11 +57,6 @@ td.empty { color: #bbb; font-style: italic; }
 .modal button { padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
 .modal .btn-cancel { background: #bdc3c7; color: white; }
 .modal .btn-confirm { background: #3498db; color: white; }
-
-.stats { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin: 15px 0; }
-.stat-card { background: white; border-radius: 8px; padding: 12px 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align: center; }
-.stat-card .stat-label { font-size: 12px; color: #7f8c8d; }
-.stat-card .stat-value { font-size: 20px; font-weight: bold; color: #2c3e50; }
 
 .conflict-list { background: #fadbd8; border-radius: 8px; padding: 12px 16px; margin: 10px 0; font-size: 14px; display: none; }
 .conflict-list.show { display: block; }
@@ -90,10 +80,8 @@ td.empty { color: #bbb; font-style: italic; }
 
 .notes-area { width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; resize: vertical; margin-top: 10px; }
 
-.export-section { margin-top: 15px; }
 .copy-btn { background: #8e44ad; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; }
 .copy-btn:hover { opacity: 0.85; }
-
 #copyStatus { font-size: 13px; color: #27ae60; margin-left: 10px; display: none; }
 
 .view-toggle { display: flex; gap: 5px; justify-content: center; margin-bottom: 15px; }
@@ -110,109 +98,100 @@ td.empty { color: #bbb; font-style: italic; }
 </head>
 <body>
 
-<h1>?? ?�師?�班?�表工具</h1>
-<p class="subtitle">11 位藥師輪?��??�系統�?每週輪調�?</p>
+<h1>💊 藥師值班班表工具</h1>
+<p class="subtitle">11 位藥師輪值排班系統（每週輪調）</p>
 <p class="subtitle" style="font-size:13px;color:#3498db;">
-輪調?��?：�?????磨�? ??�? ??泡製2 ???? ???�房 ??�? ??�? ??�? ???�藥 ??�? ???��???</p>
+輪調順序：機動 → 磨粉 → 夜2 → 泡製2 → 值2 → 病房 → 夜4 → 調1 → 夜3 → 發藥 → 夜1 → 回機動
+</p>
 
-<!-- View Toggle -->
 <div class="view-toggle">
-  <button id="viewByPharmacist" class="active" onclick="switchView('pharmacist')">?�� 以藥師為�?/button>
-  <button id="viewByShift" onclick="switchView('shift')">?�� 以班?�為�?/button>
+  <button id="viewByPharmacist" class="active" onclick="switchView('pharmacist')">👤 以藥師為主</button>
+  <button id="viewByShift" onclick="switchView('shift')">🏥 以班別為主</button>
 </div>
 
-<!-- Settings Panel -->
 <div class="settings-panel">
-  <h3>?��? ?�本設�?</h3>
+  <h3>⚙️ 基本設定</h3>
   <div class="settings-row">
     <div class="settings-item">
-      <label>?��??��?</label>
+      <label>開始日期</label>
       <input type="date" id="startDate" value="">
     </div>
     <div class="settings-item">
-      <label>?�班?�數</label>
+      <label>排班週數</label>
       <input type="number" id="weekCount" value="4" min="1" max="52">
     </div>
     <div class="settings-item">
-      <label>起�??�師（第1?��?</label>
-      <input type="text" id="firstPharmacist" value="?�師A" placeholder="第�?位輪?��??�師">
+      <label>起始藥師（第1號）</label>
+      <input type="text" id="firstPharmacist" value="藥師A" placeholder="第一位輪值的藥師">
     </div>
     <div class="settings-item">
-      <label>起�??�別（第1?��??�個班?��?�?/label>
+      <label>起始班別（第1週從哪個班開始）</label>
       <select id="startShiftSelect">
-        <option value="0">機�?</option>
-        <option value="1">磨�?</option>
-        <option value="2">�?</option>
+        <option value="0">機動</option>
+        <option value="1">磨粉</option>
+        <option value="2">夜2</option>
         <option value="3">泡製2</option>
-        <option value="4">??</option>
-        <option value="5">?�房</option>
-        <option value="6">�?</option>
-        <option value="7">�?</option>
-        <option value="8">�?</option>
-        <option value="9">?�藥</option>
-        <option value="10">�?</option>
+        <option value="4">值2</option>
+        <option value="5">病房</option>
+        <option value="6">夜4</option>
+        <option value="7">調1</option>
+        <option value="8">夜3</option>
+        <option value="9">發藥</option>
+        <option value="10">夜1</option>
       </select>
     </div>
   </div>
-  
   <div class="settings-row">
     <div class="settings-item">
-      <label>?�別?��?（用?��??��?�?/label>
-      <input type="text" id="shiftOrderInput" style="width: 600px;" value="機�?,磨�?,�?,泡製2,??,?�房,�?,�?,�?,?�藥,�?">
+      <label>班別順序（用逗號分隔）</label>
+      <input type="text" id="shiftOrderInput" style="width:600px;" value="機動,磨粉,夜2,泡製2,值2,病房,夜4,調1,夜3,發藥,夜1">
     </div>
   </div>
-
   <div class="settings-row">
     <div class="settings-item">
-      <label>?��??�制（�?行�?條�?</label>
-      <textarea id="constraintsInput" rows="5" style="width: 600px;" placeholder="例�?�?#10;?�師A ?��?不能?�班&#10;?�師C 不能???夜班&#10;?�師F ?��??��?機�?"></textarea>
+      <label>特殊限制（每行一條）</label>
+      <textarea id="constraintsInput" rows="5" style="width:600px;" placeholder="例如：&#10;藥師A 週三不能值班&#10;藥師C 不能連續夜班&#10;藥師F 週五固定機動"></textarea>
     </div>
   </div>
-
-  <div style="margin-top: 10px;">
-    <button class="btn-primary" onclick="applySettings()">套用設�?並�???/button>
-    <button class="btn-secondary" onclick="saveSettings()">?�� ?��?設�?</button>
-    <button class="btn-secondary" onclick="loadSettings()">?? 載入設�?</button>
+  <div style="margin-top:10px;">
+    <button class="btn-primary" onclick="applySettings()">套用設定並重排</button>
+    <button class="btn-secondary" onclick="saveSettings()">💾 儲存設定</button>
+    <button class="btn-secondary" onclick="loadSettings()">📂 載入設定</button>
   </div>
 </div>
 
-<!-- Pharmacist List -->
 <div class="pharmacist-list">
-  <h3>?�� ?�師?�單（�??�可?�新?��?�?/h3>
+  <h3>👥 藥師名單（點擊可重新命名）</h3>
   <div id="pharmacistTags" class="pharmacist-tags"></div>
-  <div style="margin-top: 10px;">
-    <button class="btn-secondary" onclick="renamePharmacist()">?��? ?�新?��??�師</button>
+  <div style="margin-top:10px;">
+    <button class="btn-secondary" onclick="renamePharmacist()">✏️ 重新命名藥師</button>
   </div>
 </div>
 
-<!-- Toolbar -->
 <div class="toolbar">
-  <button class="btn-success" onclick="autoGenerate()">???��??�班</button>
-  <button class="btn-primary" onclick="clearSchedule()">??�?清空?�表</button>
-  <button class="btn-warning" onclick="checkConflicts()">?? 檢查衝�?</button>
-  <button class="btn-secondary" onclick="exportCSV()">?? ?�出 CSV</button>
-  <button class="btn-secondary" onclick="exportJSON()">?�� ?�出 JSON</button>
-  <button class="btn-secondary" onclick="importJSON()">?? ?�入 JSON</button>
-  <button class="copy-btn" onclick="copyToClipboard()">?? 複製?�表?��?</button>
-  <span id="copyStatus">??已�?�?/span>
+  <button class="btn-success" onclick="autoGenerate()">⚡ 自動排班</button>
+  <button class="btn-primary" onclick="clearSchedule()">🗑️ 清空班表</button>
+  <button class="btn-warning" onclick="checkConflicts()">🔍 檢查衝突</button>
+  <button class="btn-secondary" onclick="exportCSV()">📊 匯出 CSV</button>
+  <button class="btn-secondary" onclick="exportJSON()">💾 匯出 JSON</button>
+  <button class="btn-secondary" onclick="importJSON()">📂 匯入 JSON</button>
+  <button class="copy-btn" onclick="copyToClipboard()">📋 複製班表文字</button>
+  <span id="copyStatus">✅ 已複製</span>
 </div>
 
-<!-- Week Navigation -->
 <div class="week-nav">
-  <button onclick="changeWeek(-1)">?� 上�???/button>
+  <button onclick="changeWeek(-1)">◀ 上一週</button>
   <span id="weekLabel"></span>
-  <button onclick="changeWeek(1)">下�?????/button>
+  <button onclick="changeWeek(1)">下一週 ▶</button>
 </div>
 <div class="week-selector" id="weekSelector"></div>
 <div class="month-jumper" id="monthJumper"></div>
 
-<!-- Conflict List -->
 <div class="conflict-list" id="conflictList">
-  <h4>?��? 衝�?警�?</h4>
+  <h4>⚠️ 衝突警告</h4>
   <ul id="conflictItems"></ul>
 </div>
 
-<!-- Schedule Table -->
 <div class="schedule-table-container">
   <table id="scheduleTable">
     <thead id="tableHead"></thead>
@@ -220,48 +199,42 @@ td.empty { color: #bbb; font-style: italic; }
   </table>
 </div>
 
-<!-- Shift Color Legend -->
 <div class="shift-colors" id="shiftColors"></div>
 
-<!-- Notes -->
 <div class="settings-panel">
-  <h3>?? ?�註</h3>
-  <textarea class="notes-area" id="notesArea" placeholder="?�這裡寫�??�註..."></textarea>
+  <h3>📝 備註</h3>
+  <textarea class="notes-area" id="notesArea" placeholder="在這裡寫下備註..."></textarea>
 </div>
 
-<!-- Edit Modal -->
 <div class="modal-overlay" id="editModal">
   <div class="modal">
-    <h3 id="modalTitle">修改?�表</h3>
-    <p id="modalInfo" style="margin-bottom: 12px; color: #555; font-size: 14px;"></p>
+    <h3 id="modalTitle">修改班表</h3>
+    <p id="modalInfo" style="margin-bottom:12px;color:#555;font-size:14px;"></p>
     <select id="modalSelect"></select>
     <div class="modal-buttons">
-      <button class="btn-cancel" onclick="closeModal()">?��?</button>
-      <button class="btn-confirm" onclick="confirmEdit()">確�?</button>
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button class="btn-confirm" onclick="confirmEdit()">確認</button>
     </div>
   </div>
 </div>
 
 <script>
-// ======== 資�?結�? ========
-let pharmacists = ['?�師A','?�師B','?�師C','?�師D','?�師E','?�師F','?�師G','?�師H','?�師I','?�師J','?�師K'];
-let shiftOrder = ['機�?','磨�?','�?','泡製2','??','?�房','�?','�?','�?','?�藥','�?'];
+let pharmacists = ['藥師A','藥師B','藥師C','藥師D','藥師E','藥師F','藥師G','藥師H','藥師I','藥師J','藥師K'];
+let shiftOrder = ['機動','磨粉','夜2','泡製2','值2','病房','夜4','調1','夜3','發藥','夜1'];
 let constraints = [];
-let schedule = {}; // { 'YYYY-MM-DD': { '機�?': '?�師A', '磨�?': '?�師B', ... } }
+let schedule = {};
 let weekCount = 4;
 let startDateStr = '';
 let currentWeek = 0;
 let editingCell = null;
-let currentView = 'pharmacist'; // 'pharmacist' or 'shift'
+let currentView = 'pharmacist';
 
-// ?�別顏色
 const shiftColors = {
-  '機�?': '#3498db', '磨�?': '#e67e22', '�?': '#8e44ad', '泡製2': '#1abc9c',
-  '??': '#2ecc71', '?�房': '#e74c3c', '�?': '#9b59b6', '�?': '#f39c12',
-  '�?': '#7f3f98', '?�藥': '#16a085', '�?': '#6c3483'
+  '機動':'#3498db','磨粉':'#e67e22','夜2':'#8e44ad','泡製2':'#1abc9c',
+  '值2':'#2ecc71','病房':'#e74c3c','夜4':'#9b59b6','調1':'#f39c12',
+  '夜3':'#7f3f98','發藥':'#16a085','夜1':'#6c3483'
 };
 
-// ======== ?��???========
 function init() {
   const today = new Date();
   const day = today.getDay();
@@ -270,7 +243,6 @@ function init() {
   monday.setDate(today.getDate() + diff);
   startDateStr = formatDate(monday);
   document.getElementById('startDate').value = startDateStr;
-  
   renderPharmacists();
   renderShiftColors();
   updateStartShiftOptions();
@@ -279,703 +251,343 @@ function init() {
 
 function formatDate(d) {
   const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+day;
 }
+function parseDate(s) { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function addDays(ds,n) { const d=parseDate(ds); d.setDate(d.getDate()+n); return formatDate(d); }
 
-function parseDate(s) {
-  const [y, m, d] = s.split('-').map(Number);
-  return new Date(y, m - 1, d);
-}
-
-function addDays(dateStr, n) {
-  const d = parseDate(dateStr);
-  d.setDate(d.getDate() + n);
-  return formatDate(d);
-}
-
-// ======== 視�??��? ========
 function switchView(view) {
   currentView = view;
-  document.getElementById('viewByPharmacist').classList.toggle('active', view === 'pharmacist');
-  document.getElementById('viewByShift').classList.toggle('active', view === 'shift');
+  document.getElementById('viewByPharmacist').classList.toggle('active',view==='pharmacist');
+  document.getElementById('viewByShift').classList.toggle('active',view==='shift');
   renderTable();
 }
 
-// ======== 渲�? ========
 function renderPharmacists() {
-  const container = document.getElementById('pharmacistTags');
-  container.innerHTML = '';
-  pharmacists.forEach((p, i) => {
-    const tag = document.createElement('div');
-    tag.className = 'pharmacist-tag active';
-    tag.textContent = `${i + 1}. ${p}`;
-    tag.onclick = () => { tag.classList.toggle('active'); };
-    container.appendChild(tag);
+  const c = document.getElementById('pharmacistTags'); c.innerHTML='';
+  pharmacists.forEach((p,i) => {
+    const t = document.createElement('div'); t.className='pharmacist-tag active';
+    t.textContent=(i+1)+'. '+p; t.onclick=()=>t.classList.toggle('active'); c.appendChild(t);
   });
 }
 
 function renderShiftColors() {
-  const container = document.getElementById('shiftColors');
-  container.innerHTML = '';
-  shiftOrder.forEach(shift => {
-    const item = document.createElement('div');
-    item.className = 'shift-color-item';
-    const color = shiftColors[shift] || '#95a5a6';
-    item.innerHTML = `<div class="shift-color-box" style="background:${color}"></div><span>${shift}</span>`;
-    container.appendChild(item);
+  const c=document.getElementById('shiftColors'); c.innerHTML='';
+  shiftOrder.forEach(s => {
+    const it=document.createElement('div'); it.className='shift-color-item';
+    const cl=shiftColors[s]||'#95a5a6';
+    it.innerHTML='<div class="shift-color-box" style="background:'+cl+'"></div><span>'+s+'</span>';
+    c.appendChild(it);
   });
 }
 
 function renderWeekSelector() {
-  const container = document.getElementById('weekSelector');
-  container.innerHTML = '';
-  // ?�顯示當?�週�?�??��??��?，避?�太多�???  const showRange = 5;
-  const startW = Math.max(0, currentWeek - showRange);
-  const endW = Math.min(weekCount - 1, currentWeek + showRange);
-  for (let w = startW; w <= endW; w++) {
-    const tab = document.createElement('div');
-    tab.className = 'week-tab' + (w === currentWeek ? ' active' : '');
-    const wkStart = addDays(startDateStr, w * 7);
-    const wkEnd = addDays(wkStart, 6);
-    tab.textContent = `�?{w + 1}??(${wkStart.slice(5)}~${wkEnd.slice(5)})`;
-    tab.onclick = () => { currentWeek = w; renderWeekSelector(); renderWeekLabel(); renderTable(); };
-    container.appendChild(tab);
+  const c=document.getElementById('weekSelector'); c.innerHTML='';
+  const sr=5, sw=Math.max(0,currentWeek-sr), ew=Math.min(weekCount-1,currentWeek+sr);
+  for(let w=sw;w<=ew;w++){
+    const t=document.createElement('div'); t.className='week-tab'+(w===currentWeek?' active':'');
+    const ws=addDays(startDateStr,w*7), we=addDays(ws,6);
+    t.textContent='第'+(w+1)+'週 ('+ws.slice(5)+'~'+we.slice(5)+')';
+    t.onclick=()=>{currentWeek=w;renderWeekSelector();renderWeekLabel();renderTable();};
+    c.appendChild(t);
   }
   renderMonthJumper();
 }
 
 function renderWeekLabel() {
-  const label = document.getElementById('weekLabel');
-  const wkStart = addDays(startDateStr, currentWeek * 7);
-  const wkEnd = addDays(wkStart, 6);
-  label.textContent = `�?{currentWeek + 1}??/ ${weekCount}??(${wkStart} ~ ${wkEnd})`;
+  const l=document.getElementById('weekLabel');
+  const ws=addDays(startDateStr,currentWeek*7), we=addDays(ws,6);
+  l.textContent='第'+(currentWeek+1)+'週 / '+weekCount+'週 ('+ws+' ~ '+we+')';
 }
 
-function changeWeek(delta) {
-  const newWeek = currentWeek + delta;
-  if (newWeek < 0 || newWeek >= weekCount) return;
-  currentWeek = newWeek;
-  renderWeekSelector();
-  renderWeekLabel();
-  renderTable();
+function changeWeek(d) {
+  const nw=currentWeek+d; if(nw<0||nw>=weekCount) return;
+  currentWeek=nw; renderWeekSelector(); renderWeekLabel(); renderTable();
 }
 
 function renderMonthJumper() {
-  const container = document.getElementById('monthJumper');
-  container.innerHTML = '';
-  // ?��? startDate ??weekCount 計�?涵�??��?�?  const start = parseDate(startDateStr);
-  const end = new Date(start);
-  end.setDate(end.getDate() + weekCount * 7);
-  const months = [];
-  const cur = new Date(start.getFullYear(), start.getMonth(), 1);
-  while (cur <= end) {
-    months.push({ y: cur.getFullYear(), m: cur.getMonth() });
-    cur.setMonth(cur.getMonth() + 1);
-  }
-  // ?��?顯示?��??�份
-  const wkStart = parseDate(addDays(startDateStr, currentWeek * 7));
-  const currentYM = `${wkStart.getFullYear()}-${String(wkStart.getMonth()+1).padStart(2,'0')}`;
-  
-  months.forEach(({y, m}) => {
-    const tab = document.createElement('div');
-    const ym = `${y}-${String(m+1).padStart(2,'0')}`;
-    tab.className = 'month-tab' + (ym === currentYM ? ' current-month' : '');
-    tab.textContent = `${y}/${m+1}`;
-    tab.onclick = () => {
-      // 跳到?�含此�?份第1天�???      const targetDate = new Date(y, m, 1);
-      // ?�到?�?��??��?      const dayDiff = Math.floor((targetDate - parseDate(startDateStr)) / (1000*60*60*24));
-      let targetWeek = Math.floor(dayDiff / 7);
-      if (targetWeek < 0) targetWeek = 0;
-      if (targetWeek >= weekCount) targetWeek = weekCount - 1;
-      currentWeek = targetWeek;
-      renderWeekSelector();
-      renderWeekLabel();
-      renderTable();
+  const c=document.getElementById('monthJumper'); c.innerHTML='';
+  const st=parseDate(startDateStr), end=new Date(st); end.setDate(end.getDate()+weekCount*7);
+  const months=[]; const cur=new Date(st.getFullYear(),st.getMonth(),1);
+  while(cur<=end){ months.push({y:cur.getFullYear(),m:cur.getMonth()}); cur.setMonth(cur.getMonth()+1); }
+  const ws=parseDate(addDays(startDateStr,currentWeek*7));
+  const cym=ws.getFullYear()+'-'+String(ws.getMonth()+1).padStart(2,'0');
+  months.forEach(({y,m})=>{
+    const t=document.createElement('div'); const ym=y+'-'+String(m+1).padStart(2,'0');
+    t.className='month-tab'+(ym===cym?' current-month':'');
+    t.textContent=y+'/'+(m+1);
+    t.onclick=()=>{
+      const td=new Date(y,m,1);
+      const dd=Math.floor((td-parseDate(startDateStr))/(86400000));
+      let tw=Math.floor(dd/7); if(tw<0)tw=0; if(tw>=weekCount)tw=weekCount-1;
+      currentWeek=tw; renderWeekSelector(); renderWeekLabel(); renderTable();
     };
-    container.appendChild(tab);
+    c.appendChild(t);
   });
 }
 
-function getDayName(dateStr) {
-  const days = ['?�日','?��?','?��?','?��?','?��?','?��?','?�六'];
-  return days[parseDate(dateStr).getDay()];
-}
+function getDayName(ds){const d=['週日','週一','週二','週三','週四','週五','週六'];return d[parseDate(ds).getDay()];}
 
-function renderTable() {
-  if (currentView === 'pharmacist') {
-    renderTableByPharmacist();
-  } else {
-    renderTableByShift();
-  }
-  updateStats();
-}
+function renderTable(){ if(currentView==='pharmacist') renderTableByPharmacist(); else renderTableByShift(); updateStats(); }
 
-// 以藥師為主�?：�?=?�師，�?=?��?，格�??�別
 function renderTableByPharmacist() {
-  const head = document.getElementById('tableHead');
-  const body = document.getElementById('tableBody');
-  
-  let headHTML = '<tr><th>?�師 �??��?</th>';
-  const wkStart = addDays(startDateStr, currentWeek * 7);
-  for (let i = 0; i < 7; i++) {
-    const ds = addDays(wkStart, i);
-    const isWeekend = parseDate(ds).getDay() === 0 || parseDate(ds).getDay() === 6;
-    headHTML += `<th${isWeekend ? ' style="background:#e67e22"' : ''}>${ds.slice(5)}<br><small>${getDayName(ds)}</small></th>`;
-  }
-  headHTML += '</tr>';
-  head.innerHTML = headHTML;
-  
-  body.innerHTML = '';
-  pharmacists.forEach((p, pIdx) => {
-    let rowHTML = `<tr><td style="font-weight:bold;background:#ecf0f1;">${pIdx + 1}. ${p}</td>`;
-    for (let i = 0; i < 7; i++) {
-      const ds = addDays(wkStart, i);
-      const isWeekend = parseDate(ds).getDay() === 0 || parseDate(ds).getDay() === 6;
-      let assignedShift = '';
-      if (schedule[ds]) {
-        for (const s of shiftOrder) {
-          if (schedule[ds][s] === p) { assignedShift = s; break; }
-        }
-      }
-      const color = assignedShift ? (shiftColors[assignedShift] || '#95a5a6') : '';
-      const hasConflict = assignedShift && checkCellConflict(ds, assignedShift, p);
-      if (assignedShift) {
-        rowHTML += `<td class="${isWeekend?'weekend':''} ${hasConflict?'conflict':''}" style="background:${color}33;font-weight:bold;" onclick="openEditModal('${ds}','${p}')" data-date="${ds}" data-pharmacist="${p}">${assignedShift}</td>`;
-      } else {
-        rowHTML += `<td class="${isWeekend?'weekend':''} empty" onclick="openEditModal('${ds}','${p}')" data-date="${ds}" data-pharmacist="${p}">??/td>`;
-      }
+  const h=document.getElementById('tableHead'), b=document.getElementById('tableBody');
+  let hh='<tr><th>藥師 \\ 日期</th>';
+  const ws=addDays(startDateStr,currentWeek*7);
+  for(let i=0;i<7;i++){const ds=addDays(ws,i);const wk=parseDate(ds).getDay()===0||parseDate(ds).getDay()===6;
+    hh+='<th'+(wk?' style="background:#e67e22"':'')+'>'+ds.slice(5)+'<br><small>'+getDayName(ds)+'</small></th>';}
+  h.innerHTML=hh+'</tr>';
+  b.innerHTML='';
+  pharmacists.forEach((p,pi)=>{
+    let rh='<tr><td style="font-weight:bold;background:#ecf0f1;">'+(pi+1)+'. '+p+'</td>';
+    for(let i=0;i<7;i++){
+      const ds=addDays(ws,i),wk=parseDate(ds).getDay()===0||parseDate(ds).getDay()===6;
+      let as=''; if(schedule[ds]){for(const s of shiftOrder){if(schedule[ds][s]===p){as=s;break;}}}
+      const cl=as?(shiftColors[as]||'#95a5a6'):'';
+      const cf=as&&checkCellConflict(ds,as,p);
+      if(as) rh+='<td class="'+(wk?'weekend':'')+' '+(cf?'conflict':'')+'" style="background:'+cl+'33;font-weight:bold;" onclick="openEditModal(\''+ds+'\',\''+p+'\')">'+as+'</td>';
+      else rh+='<td class="'+(wk?'weekend':'')+' empty" onclick="openEditModal(\''+ds+'\',\''+p+'\')">—</td>';
     }
-    rowHTML += '</tr>';
-    body.innerHTML += rowHTML;
+    b.innerHTML+=rh+'</tr>';
   });
 }
 
-// 以班?�為主�?：�?=?�別，�?=?��?，格�??�師
 function renderTableByShift() {
-  const head = document.getElementById('tableHead');
-  const body = document.getElementById('tableBody');
-  
-  let headHTML = '<tr><th>?�別 �??��?</th>';
-  const wkStart = addDays(startDateStr, currentWeek * 7);
-  for (let i = 0; i < 7; i++) {
-    const ds = addDays(wkStart, i);
-    const isWeekend = parseDate(ds).getDay() === 0 || parseDate(ds).getDay() === 6;
-    headHTML += `<th${isWeekend ? ' style="background:#e67e22"' : ''}>${ds.slice(5)}<br><small>${getDayName(ds)}</small></th>`;
-  }
-  headHTML += '</tr>';
-  head.innerHTML = headHTML;
-  
-  body.innerHTML = '';
-  shiftOrder.forEach(shift => {
-    let rowHTML = `<tr><td style="font-weight:bold;background:#ecf0f1;"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${shiftColors[shift]||'#95a5a6'};margin-right:6px;"></span>${shift}</td>`;
-    for (let i = 0; i < 7; i++) {
-      const ds = addDays(wkStart, i);
-      const isWeekend = parseDate(ds).getDay() === 0 || parseDate(ds).getDay() === 6;
-      const assigned = schedule[ds] && schedule[ds][shift] ? schedule[ds][shift] : '';
-      const hasConflict = assigned && checkCellConflict(ds, shift, assigned);
-      rowHTML += `<td class="${isWeekend?'weekend':''} ${assigned?'':'empty'} ${hasConflict?'conflict':''}" onclick="openEditModalShift('${ds}','${shift}')" data-date="${ds}" data-shift="${shift}">${assigned || '??}</td>`;
+  const h=document.getElementById('tableHead'), b=document.getElementById('tableBody');
+  let hh='<tr><th>班別 \\ 日期</th>';
+  const ws=addDays(startDateStr,currentWeek*7);
+  for(let i=0;i<7;i++){const ds=addDays(ws,i);const wk=parseDate(ds).getDay()===0||parseDate(ds).getDay()===6;
+    hh+='<th'+(wk?' style="background:#e67e22"':'')+'>'+ds.slice(5)+'<br><small>'+getDayName(ds)+'</small></th>';}
+  h.innerHTML=hh+'</tr>';
+  b.innerHTML='';
+  shiftOrder.forEach(shift=>{
+    let rh='<tr><td style="font-weight:bold;background:#ecf0f1;"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:'+(shiftColors[shift]||'#95a5a6')+';margin-right:6px;"></span>'+shift+'</td>';
+    for(let i=0;i<7;i++){
+      const ds=addDays(ws,i),wk=parseDate(ds).getDay()===0||parseDate(ds).getDay()===6;
+      const a=schedule[ds]&&schedule[ds][shift]?schedule[ds][shift]:'';
+      const cf=a&&checkCellConflict(ds,shift,a);
+      rh+='<td class="'+(wk?'weekend':'')+' '+(a?'':'empty')+' '+(cf?'conflict':'')+'" onclick="openEditModalShift(\''+ds+'\',\''+shift+'\')">'+(a||'—')+'</td>';
     }
-    rowHTML += '</tr>';
-    body.innerHTML += rowHTML;
+    b.innerHTML+=rh+'</tr>';
   });
 }
 
-// ======== ?��??�班 ========
 function autoGenerate() {
-  parseSettingsFromInputs();
-  schedule = {};
-  
-  const activeTags = document.querySelectorAll('.pharmacist-tag.active');
-  let activePharmacists = [];
-  activeTags.forEach((tag) => {
-    const text = tag.textContent.replace(/^\d+\.\s*/, '');
-    activePharmacists.push(text);
-  });
-  
-  if (activePharmacists.length < shiftOrder.length) {
-    alert(`?��? ?�用?�師??(${activePharmacists.length}) 少於?�別??(${shiftOrder.length})，無法�??��?\n請至少�???${shiftOrder.length} 位藥師。`);
-    return;
-  }
-  
-  let startIdx = 0;
-  const firstP = document.getElementById('firstPharmacist').value.trim();
-  if (firstP) {
-    startIdx = activePharmacists.indexOf(firstP);
-    if (startIdx < 0) startIdx = 0;
-  }
-  
-  // 每週輪調�??�師A?�週�??�班，�??��??��??��?一?�班
-  // ?�別 index ?�週數 +1，�?以藥�?index ?�週數 -1
-  const startShiftIdx = parseInt(document.getElementById('startShiftSelect').value) || 0;
-  for (let w = 0; w < weekCount; w++) {
-    for (let d = 0; d < 7; d++) {
-      const ds = addDays(startDateStr, w * 7 + d);
-      schedule[ds] = {};
-      
-      shiftOrder.forEach((shift, sIdx) => {
-        let pIdx = (startIdx - w + sIdx - startShiftIdx + activePharmacists.length * 100) % activePharmacists.length;
-        let candidate = activePharmacists[pIdx];
-        
-        let attempts = 0;
-        while (attempts < activePharmacists.length && violatesConstraint(ds, shift, candidate, schedule[ds])) {
-          pIdx = (pIdx + 1) % activePharmacists.length;
-          candidate = activePharmacists[pIdx];
-          attempts++;
-        }
-        
-        schedule[ds][shift] = candidate;
+  parseSettingsFromInputs(); schedule={};
+  const at=document.querySelectorAll('.pharmacist-tag.active'); let ap=[];
+  at.forEach(t=>{const tx=t.textContent.replace(/^\d+\.\s*/,'');ap.push(tx);});
+  if(ap.length<shiftOrder.length){alert('啟用藥師數('+ap.length+')少於班別數('+shiftOrder.length+')，無法排班！');return;}
+  let si=0; const fp=document.getElementById('firstPharmacist').value.trim();
+  if(fp){si=ap.indexOf(fp);if(si<0)si=0;}
+  const ssi=parseInt(document.getElementById('startShiftSelect').value)||0;
+  for(let w=0;w<weekCount;w++){
+    for(let d=0;d<7;d++){
+      const ds=addDays(startDateStr,w*7+d); schedule[ds]={};
+      shiftOrder.forEach((shift,sIdx)=>{
+        let pi=(si-w+sIdx-ssi+ap.length*100)%ap.length;
+        let cand=ap[pi]; let att=0;
+        while(att<ap.length&&violatesConstraint(ds,shift,cand,schedule[ds])){pi=(pi+1)%ap.length;cand=ap[pi];att++;}
+        schedule[ds][shift]=cand;
       });
     }
   }
-  
-  currentWeek = 0;
-  renderWeekSelector();
-  renderWeekLabel();
-  renderTable();
-  checkConflicts();
+  currentWeek=0; renderWeekSelector(); renderWeekLabel(); renderTable(); checkConflicts();
 }
 
-function violatesConstraint(dateStr, shift, pharmacist, daySchedule) {
-  for (const c of constraints) {
-    if (c.type === 'no_day' && c.pharmacist === pharmacist) {
-      const dayName = getDayName(dateStr);
-      if (c.day === dayName) return true;
-    }
-    if (c.type === 'no_shift' && c.pharmacist === pharmacist && c.shift === shift) return true;
-    if (c.type === 'no_date' && c.pharmacist === pharmacist && c.date === dateStr) return true;
-    if (c.type === 'no_consecutive_night' && shift.includes('�?)) {
-      const yesterday = addDays(dateStr, -1);
-      if (schedule[yesterday]) {
-        for (const s of shiftOrder) {
-          if (s.includes('�?) && schedule[yesterday][s] === pharmacist) return true;
-        }
-      }
+function violatesConstraint(ds,shift,ph,dayS) {
+  for(const c of constraints){
+    if(c.type==='no_day'&&c.pharmacist===ph&&c.day===getDayName(ds)) return true;
+    if(c.type==='no_shift'&&c.pharmacist===ph&&c.shift===shift) return true;
+    if(c.type==='no_date'&&c.pharmacist===ph&&c.date===ds) return true;
+    if(c.type==='no_consecutive_night'&&shift.includes('夜')){
+      const y=addDays(ds,-1); if(schedule[y]){for(const s of shiftOrder){if(s.includes('夜')&&schedule[y][s]===ph) return true;}}
     }
   }
-  // ?�人?�天不能?�班
-  for (const s of shiftOrder) {
-    if (s !== shift && daySchedule[s] === pharmacist) return true;
-  }
+  for(const s of shiftOrder){if(s!==shift&&dayS[s]===ph) return true;}
   return false;
 }
 
-// ======== 衝�?檢查 ========
-function checkCellConflict(dateStr, shift, pharmacist) {
-  if (!pharmacist) return false;
-  const daySchedule = schedule[dateStr];
-  if (!daySchedule) return false;
-  
-  for (const s of shiftOrder) {
-    if (s !== shift && daySchedule[s] === pharmacist) return true;
-  }
-  
-  for (const c of constraints) {
-    if (c.pharmacist !== pharmacist) continue;
-    if (c.type === 'no_day' && c.day === getDayName(dateStr)) return true;
-    if (c.type === 'no_shift' && c.shift === shift) return true;
-    if (c.type === 'no_date' && c.date === dateStr) return true;
-    if (c.type === 'no_consecutive_night' && shift.includes('�?)) {
-      const yesterday = addDays(dateStr, -1);
-      if (schedule[yesterday]) {
-        for (const s of shiftOrder) {
-          if (s.includes('�?) && schedule[yesterday][s] === pharmacist) return true;
-        }
-      }
+function checkCellConflict(ds,shift,ph) {
+  if(!ph) return false; const dS=schedule[ds]; if(!dS) return false;
+  for(const s of shiftOrder){if(s!==shift&&dS[s]===ph) return true;}
+  for(const c of constraints){
+    if(c.pharmacist!==ph) continue;
+    if(c.type==='no_day'&&c.day===getDayName(ds)) return true;
+    if(c.type==='no_shift'&&c.shift===shift) return true;
+    if(c.type==='no_date'&&c.date===ds) return true;
+    if(c.type==='no_consecutive_night'&&shift.includes('夜')){
+      const y=addDays(ds,-1); if(schedule[y]){for(const s of shiftOrder){if(s.includes('夜')&&schedule[y][s]===ph) return true;}}
     }
   }
   return false;
 }
 
 function checkConflicts() {
-  const conflicts = [];
-  const conflictList = document.getElementById('conflictList');
-  const conflictItems = document.getElementById('conflictItems');
-  
-  Object.keys(schedule).forEach(ds => {
-    if (!schedule[ds]) return;
-    shiftOrder.forEach(shift => {
-      const p = schedule[ds][shift];
-      if (p && checkCellConflict(ds, shift, p)) {
-        conflicts.push(`${ds} ${getDayName(ds)} ${shift}: ${p}`);
-      }
-    });
-  });
-  
-  if (conflicts.length > 0) {
-    conflictItems.innerHTML = conflicts.map(c => `<li>${c}</li>`).join('');
-    conflictList.classList.add('show');
-  } else {
-    conflictItems.innerHTML = '';
-    conflictList.classList.remove('show');
-  }
-  renderTable();
-  return conflicts.length;
+  const cf=[],cl=document.getElementById('conflictList'),ci=document.getElementById('conflictItems');
+  Object.keys(schedule).forEach(ds=>{if(!schedule[ds])return;shiftOrder.forEach(sh=>{const p=schedule[ds][sh];if(p&&checkCellConflict(ds,sh,p))cf.push(ds+' '+getDayName(ds)+' '+sh+': '+p);});});
+  if(cf.length>0){ci.innerHTML=cf.map(c=>'<li>'+c+'</li>').join('');cl.classList.add('show');}
+  else{ci.innerHTML='';cl.classList.remove('show');}
+  renderTable(); return cf.length;
 }
 
-// ======== 編輯（藥師�?角�?========
-function openEditModal(dateStr, pharmacist) {
-  editingCell = { dateStr, pharmacist, mode: 'pharmacist' };
-  const modal = document.getElementById('editModal');
-  const title = document.getElementById('modalTitle');
-  const info = document.getElementById('modalInfo');
-  const select = document.getElementById('modalSelect');
-  
-  let currentShift = '';
-  if (schedule[dateStr]) {
-    for (const s of shiftOrder) {
-      if (schedule[dateStr][s] === pharmacist) { currentShift = s; break; }
-    }
-  }
-  
-  title.textContent = `修改 ${getDayName(dateStr)} ${dateStr} ??{pharmacist}?��??�別`;
-  info.textContent = `?��?�?{currentShift || '�?}`;
-  
-  select.innerHTML = '<option value="">??空班 ??/option>' + 
-    shiftOrder.map(s => `<option value="${s}" ${s===currentShift?'selected':''}>${s}</option>`).join('');
-  
-  modal.classList.add('show');
+function openEditModal(ds,ph) {
+  editingCell={ds,ph,mode:'pharmacist'};
+  const m=document.getElementById('editModal'),t=document.getElementById('modalTitle'),i=document.getElementById('modalInfo'),sel=document.getElementById('modalSelect');
+  let cs=''; if(schedule[ds]){for(const s of shiftOrder){if(schedule[ds][s]===ph){cs=s;break;}}}
+  t.textContent='修改 '+getDayName(ds)+' '+ds+' 「'+ph+'」的班別';
+  i.textContent='目前：'+(cs||'空');
+  sel.innerHTML='<option value="">— 空班 —</option>'+shiftOrder.map(s=>'<option value="'+s+'" '+(s===cs?'selected':'')+'>'+s+'</option>').join('');
+  m.classList.add('show');
 }
 
-// ======== 編輯（班?��?角�?========
-function openEditModalShift(dateStr, shift) {
-  editingCell = { dateStr, shift, mode: 'shift' };
-  const modal = document.getElementById('editModal');
-  const title = document.getElementById('modalTitle');
-  const info = document.getElementById('modalInfo');
-  const select = document.getElementById('modalSelect');
-  
-  const current = schedule[dateStr] && schedule[dateStr][shift] ? schedule[dateStr][shift] : '';
-  title.textContent = `修改 ${getDayName(dateStr)} ${dateStr} ?��?{shift}?�`;
-  info.textContent = `?��?�?{current || '�?}`;
-  
-  select.innerHTML = '<option value="">??空班 ??/option>' + 
-    pharmacists.map(p => `<option value="${p}" ${p===current?'selected':''}>${p}</option>`).join('');
-  
-  modal.classList.add('show');
+function openEditModalShift(ds,shift) {
+  editingCell={ds,shift,mode:'shift'};
+  const m=document.getElementById('editModal'),t=document.getElementById('modalTitle'),i=document.getElementById('modalInfo'),sel=document.getElementById('modalSelect');
+  const cur=schedule[ds]&&schedule[ds][shift]?schedule[ds][shift]:'';
+  t.textContent='修改 '+getDayName(ds)+' '+ds+' 的「'+shift+'」';
+  i.textContent='目前：'+(cur||'空');
+  sel.innerHTML='<option value="">— 空班 —</option>'+pharmacists.map(p=>'<option value="'+p+'" '+(p===cur?'selected':'')+'>'+p+'</option>').join('');
+  m.classList.add('show');
 }
 
-function closeModal() {
-  document.getElementById('editModal').classList.remove('show');
-  editingCell = null;
-}
+function closeModal(){document.getElementById('editModal').classList.remove('show');editingCell=null;}
 
 function confirmEdit() {
-  if (!editingCell) return;
-  const select = document.getElementById('modalSelect');
-  const value = select.value;
-  
-  if (editingCell.mode === 'pharmacist') {
-    const { dateStr, pharmacist } = editingCell;
-    if (!schedule[dateStr]) schedule[dateStr] = {};
-    // 清除此藥師在此日?��??�班??    for (const s of shiftOrder) {
-      if (schedule[dateStr][s] === pharmacist) schedule[dateStr][s] = '';
-    }
-    // 設�??�班??    if (value) schedule[dateStr][value] = pharmacist;
+  if(!editingCell) return; const sel=document.getElementById('modalSelect'),v=sel.value;
+  if(editingCell.mode==='pharmacist'){
+    const {ds,ph}=editingCell; if(!schedule[ds])schedule[ds]={};
+    for(const s of shiftOrder){if(schedule[ds][s]===ph)schedule[ds][s]='';}
+    if(v)schedule[ds][v]=ph;
   } else {
-    const { dateStr, shift } = editingCell;
-    if (!schedule[dateStr]) schedule[dateStr] = {};
-    schedule[dateStr][shift] = value;
+    const {ds,shift}=editingCell; if(!schedule[ds])schedule[ds]={}; schedule[ds][shift]=v;
   }
-  
-  closeModal();
-  renderTable();
-  checkConflicts();
+  closeModal(); renderTable(); checkConflicts();
 }
 
-// ======== 設�? ========
 function parseSettingsFromInputs() {
-  const orderStr = document.getElementById('shiftOrderInput').value.trim();
-  if (orderStr) {
-    shiftOrder = orderStr.split(',').map(s => s.trim()).filter(s => s);
-  }
-  const constraintsText = document.getElementById('constraintsInput').value.trim();
-  constraints = parseConstraints(constraintsText);
-  weekCount = parseInt(document.getElementById('weekCount').value) || 4;
-  startDateStr = document.getElementById('startDate').value || startDateStr;
+  const o=document.getElementById('shiftOrderInput').value.trim();
+  if(o) shiftOrder=o.split(',').map(s=>s.trim()).filter(s=>s);
+  constraints=parseConstraints(document.getElementById('constraintsInput').value.trim());
+  weekCount=parseInt(document.getElementById('weekCount').value)||4;
+  startDateStr=document.getElementById('startDate').value||startDateStr;
   updateStartShiftOptions();
 }
 
 function updateStartShiftOptions() {
-  const select = document.getElementById('startShiftSelect');
-  const currentVal = select.value;
-  select.innerHTML = shiftOrder.map((s, i) => `<option value="${i}">${s}</option>`).join('');
-  if (currentVal && currentVal < shiftOrder.length) select.value = currentVal;
+  const sel=document.getElementById('startShiftSelect'),cv=sel.value;
+  sel.innerHTML=shiftOrder.map((s,i)=>'<option value="'+i+'">'+s+'</option>').join('');
+  if(cv&&cv<shiftOrder.length)sel.value=cv;
 }
 
 function parseConstraints(text) {
-  if (!text) return [];
-  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-  const result = [];
-  
-  for (const line of lines) {
-    const parts = line.split(/\s+/);
-    if (parts.length < 2) continue;
-    const pharmacist = parts[0];
-    const rest = parts.slice(1).join(' ');
-    
-    let m = rest.match(/??[?��?二�??��??�])不能(?:?�班|?�班)/);
-    if (m) {
-      const dayMap = {'??:'?�日','一':'?��?','�?:'?��?','�?:'?��?','??:'?��?','�?:'?��?','??:'?�六'};
-      result.push({type:'no_day', pharmacist, day: dayMap[m[1]], text: line});
-      continue;
-    }
-    m = rest.match(/不能(?:?�|??(.+)/);
-    if (m) {
-      const shiftName = m[1].trim();
-      if (shiftOrder.includes(shiftName)) {
-        result.push({type:'no_shift', pharmacist, shift: shiftName, text: line});
-        continue;
-      }
-    }
-    m = rest.match(/(\d{4}-\d{2}-\d{2})不能/);
-    if (m) {
-      result.push({type:'no_date', pharmacist, date: m[1], text: line});
-      continue;
-    }
-    if (rest.includes('不能???夜班') || rest.includes('不�??')) {
-      result.push({type:'no_consecutive_night', pharmacist, text: line});
-      continue;
-    }
-    m = rest.match(/(?:?��?|永�?)(.+)/);
-    if (m) {
-      const shiftName = m[1].trim();
-      if (shiftOrder.includes(shiftName)) {
-        result.push({type:'must_shift', pharmacist, shift: shiftName, text: line});
-        continue;
-      }
-    }
-    result.push({type:'generic', pharmacist, text: line});
+  if(!text) return []; const lines=text.split('\n').map(l=>l.trim()).filter(l=>l); const r=[];
+  for(const line of lines){
+    const parts=line.split(/\s+/); if(parts.length<2) continue;
+    const ph=parts[0],rest=parts.slice(1).join(' ');
+    let m=rest.match(/週([日一二三四五六])不能(?:值班|排班)/);
+    if(m){const dm={'日':'週日','一':'週一','二':'週二','三':'週三','四':'週四','五':'週五','六':'週六'};r.push({type:'no_day',pharmacist:ph,day:dm[m[1]],text:line});continue;}
+    m=rest.match(/不能(?:排|值)(.+)/); if(m){const sn=m[1].trim();if(shiftOrder.includes(sn)){r.push({type:'no_shift',pharmacist:ph,shift:sn,text:line});continue;}}
+    m=rest.match(/(\d{4}-\d{2}-\d{2})不能/); if(m){r.push({type:'no_date',pharmacist:ph,date:m[1],text:line});continue;}
+    if(rest.includes('不能連續夜班')||rest.includes('不連夜')){r.push({type:'no_consecutive_night',pharmacist:ph,text:line});continue;}
+    m=rest.match(/(?:固定|永遠)(.+)/); if(m){const sn=m[1].trim();if(shiftOrder.includes(sn)){r.push({type:'must_shift',pharmacist:ph,shift:sn,text:line});continue;}}
+    r.push({type:'generic',pharmacist:ph,text:line});
   }
-  return result;
+  return r;
 }
 
-function applySettings() {
-  parseSettingsFromInputs();
-  renderPharmacists();
-  renderShiftColors();
-  renderWeekSelector();
-  autoGenerate();
+function applySettings(){parseSettingsFromInputs();renderPharmacists();renderShiftColors();renderWeekSelector();renderWeekLabel();autoGenerate();}
+
+function saveSettings(){
+  const d={pharmacists,shiftOrder,constraints:document.getElementById('constraintsInput').value,
+    startDate:document.getElementById('startDate').value,weekCount:document.getElementById('weekCount').value,
+    firstPharmacist:document.getElementById('firstPharmacist').value,
+    startShift:document.getElementById('startShiftSelect').value,schedule,notes:document.getElementById('notesArea').value};
+  localStorage.setItem('pharmacistSchedule',JSON.stringify(d));alert('✅ 設定已儲存到瀏覽器');
 }
 
-function saveSettings() {
-  const data = {
-    pharmacists, shiftOrder,
-    constraints: document.getElementById('constraintsInput').value,
-    startDate: document.getElementById('startDate').value,
-    weekCount: document.getElementById('weekCount').value,
-    firstPharmacist: document.getElementById('firstPharmacist').value,
-    startShift: document.getElementById('startShiftSelect').value,
-    schedule, notes: document.getElementById('notesArea').value
-  };
-  localStorage.setItem('pharmacistSchedule', JSON.stringify(data));
-  alert('??設�?已儲存到?�覽??);
+function loadSettings(){
+  const s=localStorage.getItem('pharmacistSchedule');if(!s){alert('⚠️ 找不到已儲存的設定');return;}
+  const d=JSON.parse(s);pharmacists=d.pharmacists||pharmacists;shiftOrder=d.shiftOrder||shiftOrder;schedule=d.schedule||{};
+  document.getElementById('constraintsInput').value=d.constraints||'';
+  document.getElementById('startDate').value=d.startDate||startDateStr;
+  document.getElementById('weekCount').value=d.weekCount||4;
+  document.getElementById('firstPharmacist').value=d.firstPharmacist||'藥師A';
+  if(d.startShift!==undefined)document.getElementById('startShiftSelect').value=d.startShift;
+  document.getElementById('shiftOrderInput').value=shiftOrder.join(',');
+  document.getElementById('notesArea').value=d.notes||'';
+  startDateStr=d.startDate||startDateStr;weekCount=parseInt(d.weekCount)||4;
+  constraints=parseConstraints(d.constraints||'');
+  renderPharmacists();renderShiftColors();renderWeekSelector();renderWeekLabel();renderTable();alert('✅ 設定已載入');
 }
 
-function loadSettings() {
-  const saved = localStorage.getItem('pharmacistSchedule');
-  if (!saved) { alert('?��? ?��??�已?��??�設�?); return; }
-  const data = JSON.parse(saved);
-  pharmacists = data.pharmacists || pharmacists;
-  shiftOrder = data.shiftOrder || shiftOrder;
-  schedule = data.schedule || {};
-  document.getElementById('constraintsInput').value = data.constraints || '';
-  document.getElementById('startDate').value = data.startDate || startDateStr;
-  document.getElementById('weekCount').value = data.weekCount || 4;
-  document.getElementById('firstPharmacist').value = data.firstPharmacist || '?�師A';
-  if (data.startShift !== undefined) document.getElementById('startShiftSelect').value = data.startShift;
-  document.getElementById('shiftOrderInput').value = shiftOrder.join(',');
-  document.getElementById('notesArea').value = data.notes || '';
-  startDateStr = data.startDate || startDateStr;
-  weekCount = parseInt(data.weekCount) || 4;
-  constraints = parseConstraints(data.constraints || '');
-  renderPharmacists();
-  renderShiftColors();
-  renderWeekSelector();
-  renderWeekLabel();
-  renderTable();
-  alert('??設�?已�???);
+function clearSchedule(){if(!confirm('確定要清空整個班表嗎？'))return;schedule={};renderTable();document.getElementById('conflictList').classList.remove('show');}
+
+function renamePharmacist(){
+  const idx=prompt('要重新命名第幾位藥師？（1-'+pharmacists.length+'）');if(!idx)return;
+  const i=parseInt(idx)-1;if(i<0||i>=pharmacists.length){alert('編號錯誤');return;}
+  const nn=prompt('目前名稱：'+pharmacists[i]+'\n請輸入新名稱：');if(!nn)return;
+  Object.keys(schedule).forEach(ds=>{if(!schedule[ds])return;Object.keys(schedule[ds]).forEach(sh=>{if(schedule[ds][sh]===pharmacists[i])schedule[ds][sh]=nn;});});
+  pharmacists[i]=nn;document.getElementById('firstPharmacist').value=pharmacists[0];renderPharmacists();renderTable();
 }
 
-// ======== 清空 ========
-function clearSchedule() {
-  if (!confirm('確�?要�?空整?�班表�?�?)) return;
-  schedule = {};
-  renderTable();
-  document.getElementById('conflictList').classList.remove('show');
-}
+function updateStats(){const counts={};pharmacists.forEach(p=>counts[p]=0);Object.keys(schedule).forEach(ds=>{if(!schedule[ds])return;Object.values(schedule[ds]).forEach(p=>{if(p&&counts[p]!==undefined)counts[p]++;});});}
 
-// ======== ?�新?��? ========
-function renamePharmacist() {
-  const index = prompt('要�??�命?�第幾�??�師？�?1-' + pharmacists.length + '�?);
-  if (!index) return;
-  const i = parseInt(index) - 1;
-  if (i < 0 || i >= pharmacists.length) { alert('編�??�誤'); return; }
-  const newName = prompt(`?��??�稱�?{pharmacists[i]}\n請輸?�新?�稱：`);
-  if (!newName) return;
-  Object.keys(schedule).forEach(ds => {
-    if (!schedule[ds]) return;
-    Object.keys(schedule[ds]).forEach(shift => {
-      if (schedule[ds][shift] === pharmacists[i]) schedule[ds][shift] = newName;
-    });
-  });
-  pharmacists[i] = newName;
-  document.getElementById('firstPharmacist').value = pharmacists[0];
-  renderPharmacists();
-  renderTable();
-}
-
-// ======== 統�? ========
-function updateStats() {
-  const counts = {};
-  pharmacists.forEach(p => counts[p] = 0);
-  Object.keys(schedule).forEach(ds => {
-    if (!schedule[ds]) return;
-    Object.values(schedule[ds]).forEach(p => { if (p && counts[p] !== undefined) counts[p]++; });
-  });
-}
-
-// ======== ?�出 ========
-function exportCSV() {
-  const wkStart = addDays(startDateStr, currentWeek * 7);
-  let csv = currentView === 'pharmacist' ? '?�師' : '?�別';
-  for (let i = 0; i < 7; i++) {
-    const ds = addDays(wkStart, i);
-    csv += `,${ds} ${getDayName(ds)}`;
-  }
-  csv += '\n';
-  
-  if (currentView === 'pharmacist') {
-    pharmacists.forEach((p, pIdx) => {
-      csv += `${pIdx+1}.${p}`;
-      for (let i = 0; i < 7; i++) {
-        const ds = addDays(wkStart, i);
-        let shift = '';
-        if (schedule[ds]) { for (const s of shiftOrder) { if (schedule[ds][s] === p) { shift = s; break; } } }
-        csv += ',' + (shift || '');
-      }
-      csv += '\n';
-    });
+function exportCSV(){
+  const ws=addDays(startDateStr,currentWeek*7);
+  let csv=currentView==='pharmacist'?'藥師':'班別';
+  for(let i=0;i<7;i++){const ds=addDays(ws,i);csv+=','+ds+' '+getDayName(ds);}
+  csv+='\n';
+  if(currentView==='pharmacist'){
+    pharmacists.forEach((p,pi)=>{csv+=(pi+1)+'.'+p;for(let i=0;i<7;i++){const ds=addDays(ws,i);let sh='';if(schedule[ds]){for(const s of shiftOrder){if(schedule[ds][s]===p){sh=s;break;}}}csv+=','+(sh||'');}csv+='\n';});
   } else {
-    shiftOrder.forEach(shift => {
-      csv += shift;
-      for (let i = 0; i < 7; i++) {
-        const ds = addDays(wkStart, i);
-        csv += ',' + (schedule[ds] && schedule[ds][shift] ? schedule[ds][shift] : '');
-      }
-      csv += '\n';
-    });
+    shiftOrder.forEach(sh=>{csv+=sh;for(let i=0;i<7;i++){const ds=addDays(ws,i);csv+=','+(schedule[ds]&&schedule[ds][sh]?schedule[ds][sh]:'');}csv+='\n';});
   }
-  
-  const blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `?�師?�表_�?{currentWeek+1}??csv`;
-  a.click();
-  URL.revokeObjectURL(url);
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='藥師班表_第'+(currentWeek+1)+'週.csv';a.click();URL.revokeObjectURL(url);
 }
 
-function exportJSON() {
-  const data = {
-    pharmacists, shiftOrder,
-    constraints: document.getElementById('constraintsInput').value,
-    startDate: startDateStr, weekCount, schedule,
-    firstPharmacist: document.getElementById('firstPharmacist').value,
-    startShift: document.getElementById('startShiftSelect').value,
-    notes: document.getElementById('notesArea').value,
-    exportDate: new Date().toISOString()
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `?�師?�表_${startDateStr}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+function exportJSON(){
+  const d={pharmacists,shiftOrder,constraints:document.getElementById('constraintsInput').value,
+    startDate:startDateStr,weekCount,schedule,firstPharmacist:document.getElementById('firstPharmacist').value,
+    startShift:document.getElementById('startShiftSelect').value,notes:document.getElementById('notesArea').value,
+    exportDate:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='藥師班表_'+startDateStr+'.json';a.click();URL.revokeObjectURL(url);
 }
 
-function importJSON() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.json';
-  input.onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const data = JSON.parse(ev.target.result);
-      pharmacists = data.pharmacists || pharmacists;
-      shiftOrder = data.shiftOrder || shiftOrder;
-      schedule = data.schedule || {};
-      startDateStr = data.startDate || startDateStr;
-      weekCount = data.weekCount || 4;
-      document.getElementById('startDate').value = startDateStr;
-      document.getElementById('weekCount').value = weekCount;
-      document.getElementById('shiftOrderInput').value = shiftOrder.join(',');
-      document.getElementById('constraintsInput').value = data.constraints || '';
-      document.getElementById('firstPharmacist').value = data.firstPharmacist || pharmacists[0];
-      if (data.startShift !== undefined) document.getElementById('startShiftSelect').value = data.startShift;
-      document.getElementById('notesArea').value = data.notes || '';
-      constraints = parseConstraints(data.constraints || '');
-      updateStartShiftOptions();
-      renderPharmacists();
-      renderShiftColors();
-      renderWeekSelector();
-      renderTable();
-      alert('???�入?��?');
-    };
-    reader.readAsText(file);
-  };
-  input.click();
+function importJSON(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=(e)=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=(ev)=>{const d=JSON.parse(ev.target.result);pharmacists=d.pharmacists||pharmacists;shiftOrder=d.shiftOrder||shiftOrder;
+      schedule=d.schedule||{};startDateStr=d.startDate||startDateStr;weekCount=d.weekCount||4;
+      document.getElementById('startDate').value=startDateStr;document.getElementById('weekCount').value=weekCount;
+      document.getElementById('shiftOrderInput').value=shiftOrder.join(',');
+      document.getElementById('constraintsInput').value=d.constraints||'';
+      document.getElementById('firstPharmacist').value=d.firstPharmacist||pharmacists[0];
+      if(d.startShift!==undefined)document.getElementById('startShiftSelect').value=d.startShift;
+      document.getElementById('notesArea').value=d.notes||'';constraints=parseConstraints(d.constraints||'');
+      updateStartShiftOptions();renderPharmacists();renderShiftColors();renderWeekSelector();renderWeekLabel();renderTable();alert('✅ 匯入成功');};
+    r.readAsText(f);};inp.click();
 }
 
-function copyToClipboard() {
-  let text = '?? ?�師?�班?�表\n';
-  for (let w = 0; w < weekCount; w++) {
-    const wkStart = addDays(startDateStr, w * 7);
-    text += `\n=== �?{w+1}??(${wkStart} ~ ${addDays(wkStart, 6)}) ===\n`;
-    
-    if (currentView === 'pharmacist') {
-      text += '?�師'.padEnd(8);
-      for (let i = 0; i < 7; i++) { const ds = addDays(wkStart, i); text += `\t${getDayName(ds)}`; }
-      text += '\n';
-      pharmacists.forEach((p, pIdx) => {
-        text += `${pIdx+1}.${p}`.padEnd(8);
-        for (let i = 0; i < 7; i++) {
-          const ds = addDays(wkStart, i);
-          let shift = '';
-          if (schedule[ds]) { for (const s of shiftOrder) { if (schedule[ds][s] === p) { shift = s; break; } } }
-          text += '\t' + (shift || '??);
-        }
-        text += '\n';
-      });
+function copyToClipboard(){
+  let text='💊 藥師值班班表\n';
+  for(let w=0;w<weekCount;w++){
+    const ws=addDays(startDateStr,w*7);text+='\n=== 第'+(w+1)+'週 ('+ws+' ~ '+addDays(ws,6)+') ===\n';
+    if(currentView==='pharmacist'){
+      text+='藥師'.padEnd(8);for(let i=0;i<7;i++){text+='\t'+getDayName(addDays(ws,i));}text+='\n';
+      pharmacists.forEach((p,pi)=>{text+=(pi+1)+'.'+p;text.padEnd(8);for(let i=0;i<7;i++){const ds=addDays(ws,i);let sh='';if(schedule[ds]){for(const s of shiftOrder){if(schedule[ds][s]===p){sh=s;break;}}}text+='\t'+(sh||'—');}text+='\n';});
     } else {
-      text += '?�別'.padEnd(8);
-      for (let i = 0; i < 7; i++) { const ds = addDays(wkStart, i); text += `\t${getDayName(ds)}`; }
-      text += '\n';
-      shiftOrder.forEach(shift => {
-        text += shift.padEnd(8);
-        for (let i = 0; i < 7; i++) {
-          const ds = addDays(wkStart, i);
-          text += '\t' + (schedule[ds] && schedule[ds][shift] ? schedule[ds][shift] : '??);
-        }
-        text += '\n';
-      });
+      text+='班別'.padEnd(8);for(let i=0;i<7;i++){text+='\t'+getDayName(addDays(ws,i));}text+='\n';
+      shiftOrder.forEach(sh=>{text+=sh.padEnd(8);for(let i=0;i<7;i++){text+='\t'+(schedule[addDays(ws,i)]&&schedule[addDays(ws,i)][sh]?schedule[addDays(ws,i)][sh]:'—');}text+='\n';});
     }
   }
-  
-  navigator.clipboard.writeText(text).then(() => {
-    const status = document.getElementById('copyStatus');
-    status.style.display = 'inline';
-    setTimeout(() => status.style.display = 'none', 2000);
-  });
+  navigator.clipboard.writeText(text).then(()=>{const s=document.getElementById('copyStatus');s.style.display='inline';setTimeout(()=>s.style.display='none',2000);});
 }
 
-// ======== ?��? ========
 init();
 </script>
-
 </body>
 </html>
