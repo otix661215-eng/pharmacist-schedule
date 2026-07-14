@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>藥師值班班表工具</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Microsoft JhengHei', sans-serif; background: #f0f2f5; color: #333; padding: 20px; }
+h1 { text-align: center; margin-bottom: 10px; color: #2c3e50; }
+.subtitle { text-align: center; color: #7f8c8d; margin-bottom: 20px; font-size: 14px; }
+
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+.toolbar button { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+.toolbar button:hover { opacity: 0.85; }
+.btn-primary { background: #3498db; color: white; }
+.btn-success { background: #27ae60; color: white; }
+.btn-warning { background: #e67e22; color: white; }
+.btn-danger { background: #e74c3c; color: white; }
+.btn-secondary { background: #95a5a6; color: white; }
+
+.settings-panel { background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.settings-panel h3 { margin-bottom: 12px; color: #2c3e50; }
+.settings-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px; }
+.settings-item { display: flex; flex-direction: column; gap: 4px; }
+.settings-item label { font-size: 13px; color: #555; }
+.settings-item input, .settings-item select { padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+
+.pharmacist-list { background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.pharmacist-list h3 { margin-bottom: 12px; color: #2c3e50; }
+.pharmacist-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.pharmacist-tag { background: #ecf0f1; border: 2px solid #bdc3c7; border-radius: 20px; padding: 4px 14px; font-size: 14px; cursor: pointer; transition: 0.2s; }
+.pharmacist-tag.active { background: #3498db; color: white; border-color: #2980b9; }
+.pharmacist-tag:hover { border-color: #3498db; }
+
+.schedule-table-container { overflow-x: auto; background: white; border-radius: 10px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+table { border-collapse: collapse; width: 100%; min-width: 800px; }
+th, td { border: 1px solid #ddd; padding: 8px 10px; text-align: center; font-size: 14px; }
+th { background: #2c3e50; color: white; position: sticky; top: 0; z-index: 1; }
+td { cursor: pointer; transition: background 0.15s; }
+td:hover { background: #e8f4fd; }
+td.editing { background: #fff3cd; }
+td.weekend { background: #fef9e7; }
+td.weekend:hover { background: #fdf2c7; }
+td.conflict { background: #fadbd8 !important; border: 2px solid #e74c3c; }
+td.empty { color: #bbb; font-style: italic; }
+
+.shift-colors { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; justify-content: center; }
+.shift-color-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.shift-color-box { width: 18px; height: 18px; border-radius: 4px; border: 1px solid #999; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 10px 0; font-size: 13px; color: #555; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-box { width: 16px; height: 16px; border-radius: 3px; border: 1px solid #999; }
+
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+.modal-overlay.show { display: flex; }
+.modal { background: white; border-radius: 10px; padding: 25px; min-width: 300px; max-width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.modal h3 { margin-bottom: 15px; color: #2c3e50; }
+.modal select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; margin-bottom: 15px; }
+.modal-buttons { display: flex; gap: 10px; justify-content: flex-end; }
+.modal button { padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.modal .btn-cancel { background: #bdc3c7; color: white; }
+.modal .btn-confirm { background: #3498db; color: white; }
+
+.stats { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin: 15px 0; }
+.stat-card { background: white; border-radius: 8px; padding: 12px 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align: center; }
+.stat-card .stat-label { font-size: 12px; color: #7f8c8d; }
+.stat-card .stat-value { font-size: 20px; font-weight: bold; color: #2c3e50; }
+
+.conflict-list { background: #fadbd8; border-radius: 8px; padding: 12px 16px; margin: 10px 0; font-size: 14px; display: none; }
+.conflict-list.show { display: block; }
+.conflict-list h4 { color: #c0392b; margin-bottom: 6px; }
+.conflict-list ul { list-style: disc inside; color: #c0392b; }
+
+.week-nav { display: flex; gap: 10px; align-items: center; justify-content: center; margin-bottom: 15px; }
+.week-nav button { padding: 6px 14px; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.week-nav button:hover { background: #f0f0f0; }
+.week-nav span { font-size: 16px; font-weight: bold; color: #2c3e50; min-width: 180px; text-align: center; }
+
+.week-selector { display: flex; gap: 5px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
+.week-tab { padding: 6px 14px; border: 2px solid #ddd; background: white; border-radius: 20px; cursor: pointer; font-size: 13px; transition: 0.2s; }
+.week-tab.active { background: #3498db; color: white; border-color: #3498b9; }
+.week-tab:hover:not(.active) { border-color: #3498db; }
+
+.notes-area { width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; resize: vertical; margin-top: 10px; }
+
+.export-section { margin-top: 15px; }
+.copy-btn { background: #8e44ad; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.copy-btn:hover { opacity: 0.85; }
+
+#copyStatus { font-size: 13px; color: #27ae60; margin-left: 10px; display: none; }
+
+@media (max-width: 768px) {
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .toolbar button { width: 100%; }
+  th, td { padding: 6px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<h1>💊 藥師值班班表工具</h1>
+<p class="subtitle">11 位藥師輪值排班系統</p>
+
+<!-- Settings Panel -->
+<div class="settings-panel">
+  <h3>⚙️ 基本設定</h3>
+  <div class="settings-row">
+    <div class="settings-item">
+      <label>開始日期</label>
+      <input type="date" id="startDate" value="">
+    </div>
+    <div class="settings-item">
+      <label>排班週數</label>
+      <input type="number" id="weekCount" value="4" min="1" max="12">
+    </div>
+    <div class="settings-item">
+      <label>起始藥師（第1號）</label>
+      <input type="text" id="firstPharmacist" value="藥師A" placeholder="第一位輪值的藥師">
+    </div>
+  </div>
+  
+  <div class="settings-row">
+    <div class="settings-item">
+      <label>班別順序（用逗號分隔）</label>
+      <input type="text" id="shiftOrderInput" style="width: 600px;" value="機動,磨粉,夜2,泡製2,值2,病房,夜4,調1,夜3,發藥,夜1">
+    </div>
+  </div>
+
+  <div class="settings-row">
+    <div class="settings-item">
+      <label>特殊限制（每行一條）</label>
+      <textarea id="constraintsInput" rows="5" style="width: 600px;" placeholder="例如：&#10;藥師A 週三不能值班&#10;藥師C 不能連續夜班&#10;藥師F 週五固定機動"></textarea>
+    </div>
+  </div>
+
+  <div style="margin-top: 10px;">
+    <button class="btn-primary" onclick="applySettings()">套用設定並重排</button>
+    <button class="btn-secondary" onclick="saveSettings()">💾 儲存設定</button>
+    <button class="btn-secondary" onclick="loadSettings()">📂 載入設定</button>
+  </div>
+</div>
+
+<!-- Pharmacist List -->
+<div class="pharmacist-list">
+  <h3>👥 藥師名單（點擊可重新命名）</h3>
+  <div id="pharmacistTags" class="pharmacist-tags"></div>
+  <div style="margin-top: 10px;">
+    <button class="btn-secondary" onclick="renamePharmacist()">✏️ 重新命名藥師</button>
+  </div>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <button class="btn-success" onclick="autoGenerate()">⚡ 自動排班</button>
+  <button class="btn-primary" onclick="clearSchedule()">🗑️ 清空班表</button>
+  <button class="btn-warning" onclick="checkConflicts()">🔍 檢查衝突</button>
+  <button class="btn-secondary" onclick="exportCSV()">📊 匯出 CSV</button>
+  <button class="btn-secondary" onclick="exportJSON()">💾 匯出 JSON</button>
+  <button class="btn-secondary" onclick="importJSON()">📂 匯入 JSON</button>
+  <button class="copy-btn" onclick="copyToClipboard()">📋 複製班表文字</button>
+  <span id="copyStatus">✅ 已複製</span>
+</div>
+
+<!-- Week Navigation -->
+<div class="week-selector" id="weekSelector"></div>
+
+<!-- Conflict List -->
+<div class="conflict-list" id="conflictList">
+  <h4>⚠️ 衝突警告</h4>
+  <ul id="conflictItems"></ul>
+</div>
+
+<!-- Schedule Table -->
+<div class="schedule-table-container">
+  <table id="scheduleTable">
+    <thead id="tableHead"></thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<!-- Shift Color Legend -->
+<div class="shift-colors" id="shiftColors"></div>
+
+<!-- Notes -->
+<div class="settings-panel">
+  <h3>📝 備註</h3>
+  <textarea class="notes-area" id="notesArea" placeholder="在這裡寫下備註..."></textarea>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3 id="modalTitle">修改班表</h3>
+    <p id="modalInfo" style="margin-bottom: 12px; color: #555; font-size: 14px;"></p>
+    <select id="modalSelect"></select>
+    <div class="modal-buttons">
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button class="btn-confirm" onclick="confirmEdit()">確認</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ======== 資料結構 ========
+let pharmacists = ['藥師A','藥師B','藥師C','藥師D','藥師E','藥師F','藥師G','藥師H','藥師I','藥師J','藥師K'];
+let shiftOrder = ['機動','磨粉','夜2','泡製2','值2','病房','夜4','調1','夜3','發藥','夜1'];
+let constraints = [];
+let schedule = {}; // { 'YYYY-MM-DD': { '機動': '藥師A', '磨粉': '藥師B', ... } }
+let weekCount = 4;
+let startDateStr = '';
+let currentWeek = 0;
+let editingCell = null;
+
+// 班別顏色
+const shiftColors = {
+  '機動': '#3498db', '磨粉': '#e67e22', '夜2': '#8e44ad', '泡製2': '#1abc9c',
+  '值2': '#2ecc71', '病房': '#e74c3c', '夜4': '#9b59b6', '調1': '#f39c12',
+  '夜3': '#7f3f98', '發藥': '#16a085', '夜1': '#6c3483'
+};
+
+// ======== 初始化 ========
+function init() {
+  // Set default start date to next Monday
+  const today = new Date();
+  const day = today.getDay();
+  const diff = day === 0 ? 1 : 8 - day;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + diff);
+  startDateStr = formatDate(monday);
+  document.getElementById('startDate').value = startDateStr;
+  
+  renderPharmacists();
+  renderShiftColors();
+  applySettings();
+}
+
+function formatDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function parseDate(s) {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function addDays(dateStr, n) {
+  const d = parseDate(dateStr);
+  d.setDate(d.getDate() + n);
+  return formatDate(d);
+}
+
+// ======== 渲染 ========
+function renderPharmacists() {
+  const container = document.getElementById('pharmacistTags');
+  container.innerHTML = '';
+  pharmacists.forEach((p, i) => {
+    const tag = document.createElement('div');
+    tag.className = 'pharmacist-tag active';
+    tag.textContent = `${i + 1}. ${p}`;
+    tag.onclick = () => {
+      tag.classList.toggle('active');
+    };
+    container.appendChild(tag);
+  });
+}
+
+function renderShiftColors() {
+  const container = document.getElementById('shiftColors');
+  container.innerHTML = '';
+  shiftOrder.forEach(shift => {
+    const item = document.createElement('div');
+    item.className = 'shift-color-item';
+    const color = shiftColors[shift] || '#95a5a6';
+    item.innerHTML = `<div class="shift-color-box" style="background:${color}"></div><span>${shift}</span>`;
+    container.appendChild(item);
+  });
+}
+
+function renderWeekSelector() {
+  const container = document.getElementById('weekSelector');
+  container.innerHTML = '';
+  for (let w = 0; w < weekCount; w++) {
+    const tab = document.createElement('div');
+    tab.className = 'week-tab' + (w === currentWeek ? ' active' : '');
+    const wkStart = addDays(startDateStr, w * 7);
+    const wkEnd = addDays(wkStart, 6);
+    tab.textContent = `第${w + 1}週 (${wkStart.slice(5)}~${wkEnd.slice(5)})`;
+    tab.onclick = () => { currentWeek = w; renderWeekSelector(); renderTable(); };
+    container.appendChild(tab);
+  }
+}
+
+function getDayName(dateStr) {
+  const days = ['週日','週一','週二','週三','週四','週五','週六'];
+  return days[parseDate(dateStr).getDay()];
+}
+
+function renderTable() {
+  const head = document.getElementById('tableHead');
+  const body = document.getElementById('tableBody');
+  
+  // Header
+  let headHTML = '<tr><th>班別 ＼ 日期</th>';
+  const wkStart = addDays(startDateStr, currentWeek * 7);
+  for (let i = 0; i < 7; i++) {
+    const ds = addDays(wkStart, i);
+    const isWeekend = parseDate(ds).getDay() === 0 || parseDate(ds).getDay() === 6;
+    headHTML += `<th${isWeekend ? ' style="background:#e67e22"' : ''}>${ds.slice(5)}<br><small>${getDayName(ds)}</small></th>`;
+  }
+  headHTML += '</tr>';
+  head.innerHTML = headHTML;
+  
+  // Body - each row is a shift
+  body.innerHTML = '';
+  shiftOrder.forEach(shift => {
+    let rowHTML = `<tr><td style="font-weight:bold;background:#ecf0f1;"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${shiftColors[shift]||'#95a5a6'};margin-right:6px;"></span>${shift}</td>`;
+    for (let i = 0; i < 7; i++) {
+      const ds = addDays(wkStart, i);
+      const isWeekend = parseDate(ds).getDay() === 0 || parseDate(ds).getDay() === 6;
+      const assigned = schedule[ds] && schedule[ds][shift] ? schedule[ds][shift] : '';
+      const hasConflict = checkCellConflict(ds, shift, assigned);
+      rowHTML += `<td class="${isWeekend?'weekend':''} ${assigned?'':'empty'} ${hasConflict?'conflict':''}" 
+        onclick="openEditModal('${ds}','${shift}')" 
+        data-date="${ds}" data-shift="${shift}">${assigned || '—'}</td>`;
+    }
+    rowHTML += '</tr>';
+    body.innerHTML += rowHTML;
+  });
+  
+  // Update stats
+  updateStats();
+}
+
+// ======== 自動排班 ========
+function autoGenerate() {
+  // Parse settings
+  parseSettingsFromInputs();
+  
+  // Clear existing
+  schedule = {};
+  
+  // Get active pharmacists
+  const activeTags = document.querySelectorAll('.pharmacist-tag.active');
+  let activePharmacists = [];
+  activeTags.forEach((tag, i) => {
+    const text = tag.textContent.replace(/^\d+\.\s*/, '');
+    activePharmacists.push(text);
+  });
+  
+  if (activePharmacists.length < shiftOrder.length) {
+    alert(`⚠️ 啟用藥師數 (${activePharmacists.length}) 少於班別數 (${shiftOrder.length})，無法排班！\n請至少啟用 ${shiftOrder.length} 位藥師。`);
+    return;
+  }
+  
+  // Generate schedule for all weeks
+  const totalDays = weekCount * 7;
+  
+  // Starting position: find index of firstPharmacist
+  let startIdx = 0;
+  const firstP = document.getElementById('firstPharmacist').value.trim();
+  if (firstP) {
+    startIdx = activePharmacists.indexOf(firstP);
+    if (startIdx < 0) startIdx = 0;
+  }
+  
+  for (let d = 0; d < totalDays; d++) {
+    const ds = addDays(startDateStr, d);
+    schedule[ds] = {};
+    
+    shiftOrder.forEach((shift, sIdx) => {
+      // Each shift gets a different pharmacist, rotating by day
+      let pIdx = (startIdx + d * shiftOrder.length + sIdx) % activePharmacists.length;
+      let candidate = activePharmacists[pIdx];
+      
+      // Check constraints
+      let attempts = 0;
+      while (attempts < activePharmacists.length && violatesConstraint(ds, shift, candidate, schedule[ds])) {
+        pIdx = (pIdx + 1) % activePharmacists.length;
+        candidate = activePharmacists[pIdx];
+        attempts++;
+      }
+      
+      schedule[ds][shift] = candidate;
+    });
+  }
+  
+  currentWeek = 0;
+  renderWeekSelector();
+  renderTable();
+  checkConflicts();
+}
+
+function violatesConstraint(dateStr, shift, pharmacist, daySchedule) {
+  for (const c of constraints) {
+    // Constraint format: {type, pharmacist, day, shift, text}
+    if (c.type === 'no_day' && c.pharmacist === pharmacist) {
+      const dayName = getDayName(dateStr);
+      if (c.day === dayName) return true;
+    }
+    if (c.type === 'no_shift' && c.pharmacist === pharmacist && c.shift === shift) {
+      return true;
+    }
+    if (c.type === 'no_date' && c.pharmacist === pharmacist && c.date === dateStr) {
+      return true;
+    }
+    if (c.type === 'must_shift' && c.pharmacist === pharmacist && c.shift === shift) {
+      // This is a "must" - doesn't violate, but we should prioritize
+    }
+    if (c.type === 'no_consecutive_night' && shift.includes('夜')) {
+      // Check if this pharmacist had night shift yesterday
+      const yesterday = addDays(dateStr, -1);
+      if (schedule[yesterday]) {
+        for (const s of shiftOrder) {
+          if (s.includes('夜') && schedule[yesterday][s] === pharmacist) return true;
+        }
+      }
+    }
+    if (c.type === 'same_pharmacist_same_day' && c.pharmacist === pharmacist) {
+      // Check if pharmacist already assigned to another shift today
+      for (const s of shiftOrder) {
+        if (s !== shift && daySchedule[s] === pharmacist) return true;
+      }
+    }
+  }
+  
+  // Default rule: no same pharmacist on two different shifts same day
+  for (const s of shiftOrder) {
+    if (s !== shift && daySchedule[s] === pharmacist) return true;
+  }
+  
+  return false;
+}
+
+// ======== 衝突檢查 ========
+function checkCellConflict(dateStr, shift, pharmacist) {
+  if (!pharmacist) return false;
+  const daySchedule = schedule[dateStr];
+  if (!daySchedule) return false;
+  
+  // Check same pharmacist on same day different shift
+  for (const s of shiftOrder) {
+    if (s !== shift && daySchedule[s] === pharmacist) return true;
+  }
+  
+  // Check constraints
+  for (const c of constraints) {
+    if (c.pharmacist !== pharmacist) continue;
+    if (c.type === 'no_day' && c.day === getDayName(dateStr)) return true;
+    if (c.type === 'no_shift' && c.shift === shift) return true;
+    if (c.type === 'no_date' && c.date === dateStr) return true;
+    if (c.type === 'no_consecutive_night' && shift.includes('夜')) {
+      const yesterday = addDays(dateStr, -1);
+      if (schedule[yesterday]) {
+        for (const s of shiftOrder) {
+          if (s.includes('夜') && schedule[yesterday][s] === pharmacist) return true;
+        }
+      }
+    }
+  }
+  
+  return false;
+}
+
+function checkConflicts() {
+  const conflicts = [];
+  const conflictList = document.getElementById('conflictList');
+  const conflictItems = document.getElementById('conflictItems');
+  
+  Object.keys(schedule).forEach(ds => {
+    if (!schedule[ds]) return;
+    shiftOrder.forEach(shift => {
+      const p = schedule[ds][shift];
+      if (p && checkCellConflict(ds, shift, p)) {
+        conflicts.push(`${ds} ${getDayName(ds)} ${shift}: ${p}`);
+      }
+    });
+  });
+  
+  if (conflicts.length > 0) {
+    conflictItems.innerHTML = conflicts.map(c => `<li>${c}</li>`).join('');
+    conflictList.classList.add('show');
+  } else {
+    conflictItems.innerHTML = '';
+    conflictList.classList.remove('show');
+  }
+  
+  renderTable();
+  return conflicts.length;
+}
+
+// ======== 編輯 ========
+function openEditModal(dateStr, shift) {
+  editingCell = { dateStr, shift };
+  const modal = document.getElementById('editModal');
+  const title = document.getElementById('modalTitle');
+  const info = document.getElementById('modalInfo');
+  const select = document.getElementById('modalSelect');
+  
+  title.textContent = `修改 ${getDayName(dateStr)} ${dateStr} 的「${shift}」`;
+  const current = schedule[dateStr] && schedule[dateStr][shift] ? schedule[dateStr][shift] : '';
+  info.textContent = `目前：${current || '空'}`;
+  
+  select.innerHTML = '<option value="">— 空班 —</option>' + 
+    pharmacists.map(p => `<option value="${p}" ${p===current?'selected':''}>${p}</option>`).join('');
+  
+  modal.classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('editModal').classList.remove('show');
+  editingCell = null;
+}
+
+function confirmEdit() {
+  if (!editingCell) return;
+  const select = document.getElementById('modalSelect');
+  const value = select.value;
+  
+  if (!schedule[editingCell.dateStr]) schedule[editingCell.dateStr] = {};
+  schedule[editingCell.dateStr][editingCell.shift] = value;
+  
+  closeModal();
+  renderTable();
+  checkConflicts();
+}
+
+// ======== 設定 ========
+function parseSettingsFromInputs() {
+  const orderStr = document.getElementById('shiftOrderInput').value.trim();
+  if (orderStr) {
+    shiftOrder = orderStr.split(',').map(s => s.trim()).filter(s => s);
+  }
+  
+  const constraintsText = document.getElementById('constraintsInput').value.trim();
+  constraints = parseConstraints(constraintsText);
+  
+  weekCount = parseInt(document.getElementById('weekCount').value) || 4;
+  startDateStr = document.getElementById('startDate').value || startDateStr;
+}
+
+function parseConstraints(text) {
+  if (!text) return [];
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+  const result = [];
+  
+  for (const line of lines) {
+    // Try to parse: 藥師X 限制 規則
+    const parts = line.split(/\s+/);
+    if (parts.length < 2) continue;
+    
+    const pharmacist = parts[0];
+    const rest = parts.slice(1).join(' ');
+    
+    // Pattern: 週X不能值班
+    let m = rest.match(/週([日一二三四五六])不能(?:值班|排班)/);
+    if (m) {
+      const dayMap = {'日':'週日','一':'週一','二':'週二','三':'週三','四':'週四','五':'週五','六':'週六'};
+      result.push({type:'no_day', pharmacist, day: dayMap[m[1]], text: line});
+      continue;
+    }
+    
+    // Pattern: 不能排XX
+    m = rest.match(/不能(?:排|值)(.+)/);
+    if (m) {
+      const shiftName = m[1].trim();
+      if (shiftOrder.includes(shiftName)) {
+        result.push({type:'no_shift', pharmacist, shift: shiftName, text: line});
+        continue;
+      }
+    }
+    
+    // Pattern: X月X日不能
+    m = rest.match(/(\d{4}-\d{2}-\d{2})不能/);
+    if (m) {
+      result.push({type:'no_date', pharmacist, date: m[1], text: line});
+      continue;
+    }
+    
+    // Pattern: 不能連續夜班
+    if (rest.includes('不能連續夜班') || rest.includes('不連夜')) {
+      result.push({type:'no_consecutive_night', pharmacist, text: line});
+      continue;
+    }
+    
+    // Pattern: 固定XX
+    m = rest.match(/(?:固定|永遠)(.+)/);
+    if (m) {
+      const shiftName = m[1].trim();
+      if (shiftOrder.includes(shiftName)) {
+        result.push({type:'must_shift', pharmacist, shift: shiftName, text: line});
+        continue;
+      }
+    }
+    
+    // Store as generic
+    result.push({type:'generic', pharmacist, text: line});
+  }
+  
+  return result;
+}
+
+function applySettings() {
+  parseSettingsFromInputs();
+  renderPharmacists();
+  renderShiftColors();
+  renderWeekSelector();
+  autoGenerate();
+}
+
+function saveSettings() {
+  const data = {
+    pharmacists,
+    shiftOrder,
+    constraints: document.getElementById('constraintsInput').value,
+    startDate: document.getElementById('startDate').value,
+    weekCount: document.getElementById('weekCount').value,
+    firstPharmacist: document.getElementById('firstPharmacist').value,
+    schedule,
+    notes: document.getElementById('notesArea').value
+  };
+  localStorage.setItem('pharmacistSchedule', JSON.stringify(data));
+  alert('✅ 設定已儲存到瀏覽器');
+}
+
+function loadSettings() {
+  const saved = localStorage.getItem('pharmacistSchedule');
+  if (!saved) { alert('⚠️ 找不到已儲存的設定'); return; }
+  const data = JSON.parse(saved);
+  pharmacists = data.pharmacists || pharmacists;
+  shiftOrder = data.shiftOrder || shiftOrder;
+  schedule = data.schedule || {};
+  document.getElementById('constraintsInput').value = data.constraints || '';
+  document.getElementById('startDate').value = data.startDate || startDateStr;
+  document.getElementById('weekCount').value = data.weekCount || 4;
+  document.getElementById('firstPharmacist').value = data.firstPharmacist || '藥師A';
+  document.getElementById('shiftOrderInput').value = shiftOrder.join(',');
+  document.getElementById('notesArea').value = data.notes || '';
+  startDateStr = data.startDate || startDateStr;
+  weekCount = parseInt(data.weekCount) || 4;
+  constraints = parseConstraints(data.constraints || '');
+  renderPharmacists();
+  renderShiftColors();
+  renderWeekSelector();
+  renderTable();
+  alert('✅ 設定已載入');
+}
+
+// ======== 清空 ========
+function clearSchedule() {
+  if (!confirm('確定要清空整個班表嗎？')) return;
+  schedule = {};
+  renderTable();
+  document.getElementById('conflictList').classList.remove('show');
+}
+
+// ======== 重新命名 ========
+function renamePharmacist() {
+  const index = prompt('要重新命名第幾位藥師？（1-' + pharmacists.length + '）');
+  if (!index) return;
+  const i = parseInt(index) - 1;
+  if (i < 0 || i >= pharmacists.length) { alert('編號錯誤'); return; }
+  const newName = prompt(`目前名稱：${pharmacists[i]}\n請輸入新名稱：`);
+  if (!newName) return;
+  // Update schedule references
+  Object.keys(schedule).forEach(ds => {
+    if (!schedule[ds]) return;
+    Object.keys(schedule[ds]).forEach(shift => {
+      if (schedule[ds][shift] === pharmacists[i]) schedule[ds][shift] = newName;
+    });
+  });
+  pharmacists[i] = newName;
+  document.getElementById('firstPharmacist').value = pharmacists[0];
+  renderPharmacists();
+  renderTable();
+}
+
+// ======== 統計 ========
+function updateStats() {
+  // Count shifts per pharmacist
+  const counts = {};
+  pharmacists.forEach(p => counts[p] = 0);
+  
+  Object.keys(schedule).forEach(ds => {
+    if (!schedule[ds]) return;
+    Object.values(schedule[ds]).forEach(p => {
+      if (p && counts[p] !== undefined) counts[p]++;
+    });
+  });
+  
+  // Could display somewhere
+}
+
+// ======== 匯出 ========
+function exportCSV() {
+  const wkStart = addDays(startDateStr, currentWeek * 7);
+  let csv = '班別';
+  for (let i = 0; i < 7; i++) {
+    const ds = addDays(wkStart, i);
+    csv += `,${ds} ${getDayName(ds)}`;
+  }
+  csv += '\n';
+  
+  shiftOrder.forEach(shift => {
+    csv += shift;
+    for (let i = 0; i < 7; i++) {
+      const ds = addDays(wkStart, i);
+      csv += ',' + (schedule[ds] && schedule[ds][shift] ? schedule[ds][shift] : '');
+    }
+    csv += '\n';
+  });
+  
+  const blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `藥師班表_第${currentWeek+1}週.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportJSON() {
+  const data = {
+    pharmacists, shiftOrder, constraints: document.getElementById('constraintsInput').value,
+    startDate: startDateStr, weekCount, schedule,
+    notes: document.getElementById('notesArea').value,
+    exportDate: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `藥師班表_${startDateStr}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJSON() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const data = JSON.parse(ev.target.result);
+      pharmacists = data.pharmacists || pharmacists;
+      shiftOrder = data.shiftOrder || shiftOrder;
+      schedule = data.schedule || {};
+      startDateStr = data.startDate || startDateStr;
+      weekCount = data.weekCount || 4;
+      document.getElementById('startDate').value = startDateStr;
+      document.getElementById('weekCount').value = weekCount;
+      document.getElementById('shiftOrderInput').value = shiftOrder.join(',');
+      document.getElementById('constraintsInput').value = data.constraints || '';
+      document.getElementById('notesArea').value = data.notes || '';
+      constraints = parseConstraints(data.constraints || '');
+      renderPharmacists();
+      renderShiftColors();
+      renderWeekSelector();
+      renderTable();
+      alert('✅ 匯入成功');
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function copyToClipboard() {
+  let text = '💊 藥師值班班表\n';
+  for (let w = 0; w < weekCount; w++) {
+    const wkStart = addDays(startDateStr, w * 7);
+    text += `\n=== 第${w+1}週 (${wkStart} ~ ${addDays(wkStart, 6)}) ===\n`;
+    // Header
+    text += '班別'.padEnd(8);
+    for (let i = 0; i < 7; i++) {
+      const ds = addDays(wkStart, i);
+      text += `\t${getDayName(ds)}`;
+    }
+    text += '\n';
+    // Rows
+    shiftOrder.forEach(shift => {
+      text += shift.padEnd(8);
+      for (let i = 0; i < 7; i++) {
+        const ds = addDays(wkStart, i);
+        text += '\t' + (schedule[ds] && schedule[ds][shift] ? schedule[ds][shift] : '—');
+      }
+      text += '\n';
+    });
+  }
+  
+  navigator.clipboard.writeText(text).then(() => {
+    const status = document.getElementById('copyStatus');
+    status.style.display = 'inline';
+    setTimeout(() => status.style.display = 'none', 2000);
+  });
+}
+
+// ======== 啟動 ========
+init();
+</script>
+
+</body>
+</html>
