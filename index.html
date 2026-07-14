@@ -101,7 +101,9 @@ td.empty { color: #bbb; font-style: italic; }
 <body>
 
 <h1>💊 藥師值班班表工具</h1>
-<p class="subtitle">11 位藥師輪值排班系統</p>
+<p class="subtitle">11 位藥師輪值排班系統（每週輪調）</p>
+<p class="subtitle" style="font-size:13px;color:#3498db;">
+輪調順序：機動 → 磨粉 → 夜2 → 泡製2 → 值2 → 病房 → 夜4 → 調1 → 夜3 → 發藥 → 夜1 → 回機動</p>
 
 <!-- Settings Panel -->
 <div class="settings-panel">
@@ -368,25 +370,30 @@ function autoGenerate() {
     if (startIdx < 0) startIdx = 0;
   }
   
-  for (let d = 0; d < totalDays; d++) {
-    const ds = addDays(startDateStr, d);
-    schedule[ds] = {};
-    
-    shiftOrder.forEach((shift, sIdx) => {
-      // Each shift gets a different pharmacist, rotating by day
-      let pIdx = (startIdx + d * shiftOrder.length + sIdx) % activePharmacists.length;
-      let candidate = activePharmacists[pIdx];
+  // 每週輪調：每位藥師這週固定一個班別，下週換下一個
+  // 第1週：藥師A=機動, 藥師B=磨粉, ... 藥師K=夜1
+  // 第2週：藥師A=磨粉, 藥師B=夜2, ... 藥師K=機動（全體往前推一個）
+  for (let w = 0; w < weekCount; w++) {
+    for (let d = 0; d < 7; d++) {
+      const ds = addDays(startDateStr, w * 7 + d);
+      schedule[ds] = {};
       
-      // Check constraints
-      let attempts = 0;
-      while (attempts < activePharmacists.length && violatesConstraint(ds, shift, candidate, schedule[ds])) {
-        pIdx = (pIdx + 1) % activePharmacists.length;
-        candidate = activePharmacists[pIdx];
-        attempts++;
-      }
-      
-      schedule[ds][shift] = candidate;
-    });
+      shiftOrder.forEach((shift, sIdx) => {
+        // 每週輪調：藥師的班別隨週數往前推
+        let pIdx = (startIdx + w + sIdx) % activePharmacists.length;
+        let candidate = activePharmacists[pIdx];
+        
+        // Check constraints
+        let attempts = 0;
+        while (attempts < activePharmacists.length && violatesConstraint(ds, shift, candidate, schedule[ds])) {
+          pIdx = (pIdx + 1) % activePharmacists.length;
+          candidate = activePharmacists[pIdx];
+          attempts++;
+        }
+        
+        schedule[ds][shift] = candidate;
+      });
+    }
   }
   
   currentWeek = 0;
