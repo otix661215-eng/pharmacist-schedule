@@ -118,7 +118,13 @@ td.empty { color: #bbb; font-style: italic; }
     </div>
     <div class="settings-item">
       <label>排班週數</label>
-      <input type="number" id="weekCount" value="4" min="1" max="52">
+      <input type="number" id="weekCount" value="52" min="1" max="52">
+      <div style="font-size:12px;margin-top:4px;">
+        <button type="button" onclick="setWeeks(4)" style="padding:2px 8px;border:1px solid #ddd;border-radius:4px;cursor:pointer;background:white;">1月</button>
+        <button type="button" onclick="setWeeks(13)" style="padding:2px 8px;border:1px solid #ddd;border-radius:4px;cursor:pointer;background:white;">3月</button>
+        <button type="button" onclick="setWeeks(26)" style="padding:2px 8px;border:1px solid #ddd;border-radius:4px;cursor:pointer;background:white;">半年</button>
+        <button type="button" onclick="setWeeks(52)" style="padding:2px 8px;border:1px solid #ddd;border-radius:4px;cursor:pointer;background:#3498db;color:white;">全年</button>
+      </div>
     </div>
     <div class="settings-item">
       <label>起始藥師（第1號）</label>
@@ -223,7 +229,7 @@ let pharmacists = ['藥師A','藥師B','藥師C','藥師D','藥師E','藥師F','
 let shiftOrder = ['機動','磨粉','夜2','泡製2','值2','病房','夜4','調1','夜3','發藥','夜1'];
 let constraints = [];
 let schedule = {};
-let weekCount = 4;
+let weekCount = 52;
 let startDateStr = '';
 let currentWeek = 0;
 let editingCell = null;
@@ -234,6 +240,11 @@ const shiftColors = {
   '值2':'#2ecc71','病房':'#e74c3c','夜4':'#9b59b6','調1':'#f39c12',
   '夜3':'#7f3f98','發藥':'#16a085','夜1':'#6c3483'
 };
+
+function setWeeks(n) {
+  document.getElementById('weekCount').value = n;
+  applySettings();
+}
 
 function init() {
   const today = new Date();
