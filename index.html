@@ -121,6 +121,22 @@ td.empty { color: #bbb; font-style: italic; }
       <label>起始藥師（第1號）</label>
       <input type="text" id="firstPharmacist" value="藥師A" placeholder="第一位輪值的藥師">
     </div>
+    <div class="settings-item">
+      <label>起始班別（第1週從哪個班開始）</label>
+      <select id="startShiftSelect">
+        <option value="0">機動</option>
+        <option value="1">磨粉</option>
+        <option value="2">夜2</option>
+        <option value="3">泡製2</option>
+        <option value="4">值2</option>
+        <option value="5">病房</option>
+        <option value="6">夜4</option>
+        <option value="7">調1</option>
+        <option value="8">夜3</option>
+        <option value="9">發藥</option>
+        <option value="10">夜1</option>
+      </select>
+    </div>
   </div>
   
   <div class="settings-row">
@@ -235,6 +251,7 @@ function init() {
   
   renderPharmacists();
   renderShiftColors();
+  updateStartShiftOptions();
   applySettings();
 }
 
@@ -371,16 +388,17 @@ function autoGenerate() {
   }
   
   // 每週輪調：每位藥師這週固定一個班別，下週換下一個
-  // 第1週：藥師A=機動, 藥師B=磨粉, ... 藥師K=夜1
-  // 第2週：藥師A=磨粉, 藥師B=夜2, ... 藥師K=機動（全體往前推一個）
+  // 起始班別由使用者選擇，第1週從該班別開始
+  // 例如起始班別=磨粉：第1週 藥師A=磨粉, 藥師B=夜2, ... 第2週 藥師A=夜2, ...
+  const startShiftIdx = parseInt(document.getElementById('startShiftSelect').value) || 0;
   for (let w = 0; w < weekCount; w++) {
     for (let d = 0; d < 7; d++) {
       const ds = addDays(startDateStr, w * 7 + d);
       schedule[ds] = {};
       
       shiftOrder.forEach((shift, sIdx) => {
-        // 每週輪調：藥師的班別隨週數往前推
-        let pIdx = (startIdx + w + sIdx) % activePharmacists.length;
+        // 每週輪調：以起始班別為基準，藥師隨週數往前推
+        let pIdx = (startIdx + w + sIdx - startShiftIdx + activePharmacists.length * 100) % activePharmacists.length;
         let candidate = activePharmacists[pIdx];
         
         // Check constraints
@@ -548,6 +566,14 @@ function parseSettingsFromInputs() {
   
   weekCount = parseInt(document.getElementById('weekCount').value) || 4;
   startDateStr = document.getElementById('startDate').value || startDateStr;
+  updateStartShiftOptions();
+}
+
+function updateStartShiftOptions() {
+  const select = document.getElementById('startShiftSelect');
+  const currentVal = select.value;
+  select.innerHTML = shiftOrder.map((s, i) => `<option value="${i}">${s}</option>`).join('');
+  if (currentVal && currentVal < shiftOrder.length) select.value = currentVal;
 }
 
 function parseConstraints(text) {
@@ -627,6 +653,7 @@ function saveSettings() {
     startDate: document.getElementById('startDate').value,
     weekCount: document.getElementById('weekCount').value,
     firstPharmacist: document.getElementById('firstPharmacist').value,
+    startShift: document.getElementById('startShiftSelect').value,
     schedule,
     notes: document.getElementById('notesArea').value
   };
@@ -645,6 +672,7 @@ function loadSettings() {
   document.getElementById('startDate').value = data.startDate || startDateStr;
   document.getElementById('weekCount').value = data.weekCount || 4;
   document.getElementById('firstPharmacist').value = data.firstPharmacist || '藥師A';
+  if (data.startShift !== undefined) document.getElementById('startShiftSelect').value = data.startShift;
   document.getElementById('shiftOrderInput').value = shiftOrder.join(',');
   document.getElementById('notesArea').value = data.notes || '';
   startDateStr = data.startDate || startDateStr;
@@ -734,6 +762,8 @@ function exportJSON() {
   const data = {
     pharmacists, shiftOrder, constraints: document.getElementById('constraintsInput').value,
     startDate: startDateStr, weekCount, schedule,
+    firstPharmacist: document.getElementById('firstPharmacist').value,
+    startShift: document.getElementById('startShiftSelect').value,
     notes: document.getElementById('notesArea').value,
     exportDate: new Date().toISOString()
   };
@@ -765,8 +795,11 @@ function importJSON() {
       document.getElementById('weekCount').value = weekCount;
       document.getElementById('shiftOrderInput').value = shiftOrder.join(',');
       document.getElementById('constraintsInput').value = data.constraints || '';
+      document.getElementById('firstPharmacist').value = data.firstPharmacist || pharmacists[0];
+      if (data.startShift !== undefined) document.getElementById('startShiftSelect').value = data.startShift;
       document.getElementById('notesArea').value = data.notes || '';
       constraints = parseConstraints(data.constraints || '');
+      updateStartShiftOptions();
       renderPharmacists();
       renderShiftColors();
       renderWeekSelector();
