@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>?¥å¸«?¼ç­?­è¡¨å·¥å…·</title>
+<title>?ï¿½å¸«?ï¿½ç­?ï¿½è¡¨å·¥å…·</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Microsoft JhengHei', sans-serif; background: #f0f2f5; color: #333; padding: 20px; }
@@ -110,105 +110,105 @@ td.empty { color: #bbb; font-style: italic; }
 </head>
 <body>
 
-<h1>?? ?¥å¸«?¼ç­?­è¡¨å·¥å…·</h1>
-<p class="subtitle">11 ä½è—¥å¸«è¼ª?¼æ??­ç³»çµ±ï?æ¯é€±è¼ªèª¿ï?</p>
+<h1>?? ?ï¿½å¸«?ï¿½ç­?ï¿½è¡¨å·¥å…·</h1>
+<p class="subtitle">11 ä½è—¥å¸«è¼ª?ï¿½ï¿½??ï¿½ç³»çµ±ï¿½?æ¯é€±è¼ªèª¿ï¿½?</p>
 <p class="subtitle" style="font-size:13px;color:#3498db;">
-è¼ªèª¿?†å?ï¼šæ?????ç£¨ç? ??å¤? ??æ³¡è£½2 ???? ???…æˆ¿ ??å¤? ??èª? ??å¤? ???¼è—¥ ??å¤? ???æ???</p>
+è¼ªèª¿?ï¿½ï¿½?ï¼šï¿½?????ç£¨ï¿½? ??ï¿½? ??æ³¡è£½2 ???? ???ï¿½æˆ¿ ??ï¿½? ??ï¿½? ??ï¿½? ???ï¿½è—¥ ??ï¿½? ???ï¿½ï¿½???</p>
 
 <!-- View Toggle -->
 <div class="view-toggle">
-  <button id="viewByPharmacist" class="active" onclick="switchView('pharmacist')">?‘¤ ä»¥è—¥å¸«ç‚ºä¸?/button>
-  <button id="viewByShift" onclick="switchView('shift')">?¥ ä»¥ç­?¥ç‚ºä¸?/button>
+  <button id="viewByPharmacist" class="active" onclick="switchView('pharmacist')">?ï¿½ï¿½ ä»¥è—¥å¸«ç‚ºï¿½?/button>
+  <button id="viewByShift" onclick="switchView('shift')">?ï¿½ï¿½ ä»¥ç­?ï¿½ç‚ºï¿½?/button>
 </div>
 
 <!-- Settings Panel -->
 <div class="settings-panel">
-  <h3>?™ï? ?ºæœ¬è¨­å?</h3>
+  <h3>?ï¿½ï¿½? ?ï¿½æœ¬è¨­ï¿½?</h3>
   <div class="settings-row">
     <div class="settings-item">
-      <label>?‹å??¥æ?</label>
+      <label>?ï¿½ï¿½??ï¿½ï¿½?</label>
       <input type="date" id="startDate" value="">
     </div>
     <div class="settings-item">
-      <label>?’ç­?±æ•¸</label>
+      <label>?ï¿½ç­?ï¿½æ•¸</label>
       <input type="number" id="weekCount" value="4" min="1" max="52">
     </div>
     <div class="settings-item">
-      <label>èµ·å??¥å¸«ï¼ˆç¬¬1?Ÿï?</label>
-      <input type="text" id="firstPharmacist" value="?¥å¸«A" placeholder="ç¬¬ä?ä½è¼ª?¼ç??¥å¸«">
+      <label>èµ·ï¿½??ï¿½å¸«ï¼ˆç¬¬1?ï¿½ï¿½?</label>
+      <input type="text" id="firstPharmacist" value="?ï¿½å¸«A" placeholder="ç¬¬ï¿½?ä½è¼ª?ï¿½ï¿½??ï¿½å¸«">
     </div>
     <div class="settings-item">
-      <label>èµ·å??­åˆ¥ï¼ˆç¬¬1?±å??ªå€‹ç­?‹å?ï¼?/label>
+      <label>èµ·ï¿½??ï¿½åˆ¥ï¼ˆç¬¬1?ï¿½ï¿½??ï¿½å€‹ç­?ï¿½ï¿½?ï¿½?/label>
       <select id="startShiftSelect">
-        <option value="0">æ©Ÿå?</option>
-        <option value="1">ç£¨ç?</option>
-        <option value="2">å¤?</option>
+        <option value="0">æ©Ÿï¿½?</option>
+        <option value="1">ç£¨ï¿½?</option>
+        <option value="2">ï¿½?</option>
         <option value="3">æ³¡è£½2</option>
         <option value="4">??</option>
-        <option value="5">?…æˆ¿</option>
-        <option value="6">å¤?</option>
-        <option value="7">èª?</option>
-        <option value="8">å¤?</option>
-        <option value="9">?¼è—¥</option>
-        <option value="10">å¤?</option>
+        <option value="5">?ï¿½æˆ¿</option>
+        <option value="6">ï¿½?</option>
+        <option value="7">ï¿½?</option>
+        <option value="8">ï¿½?</option>
+        <option value="9">?ï¿½è—¥</option>
+        <option value="10">ï¿½?</option>
       </select>
     </div>
   </div>
   
   <div class="settings-row">
     <div class="settings-item">
-      <label>?­åˆ¥?†å?ï¼ˆç”¨?—è??†é?ï¼?/label>
-      <input type="text" id="shiftOrderInput" style="width: 600px;" value="æ©Ÿå?,ç£¨ç?,å¤?,æ³¡è£½2,??,?…æˆ¿,å¤?,èª?,å¤?,?¼è—¥,å¤?">
+      <label>?ï¿½åˆ¥?ï¿½ï¿½?ï¼ˆç”¨?ï¿½ï¿½??ï¿½ï¿½?ï¿½?/label>
+      <input type="text" id="shiftOrderInput" style="width: 600px;" value="æ©Ÿï¿½?,ç£¨ï¿½?,ï¿½?,æ³¡è£½2,??,?ï¿½æˆ¿,ï¿½?,ï¿½?,ï¿½?,?ï¿½è—¥,ï¿½?">
     </div>
   </div>
 
   <div class="settings-row">
     <div class="settings-item">
-      <label>?¹æ??åˆ¶ï¼ˆæ?è¡Œä?æ¢ï?</label>
-      <textarea id="constraintsInput" rows="5" style="width: 600px;" placeholder="ä¾‹å?ï¼?#10;?¥å¸«A ?±ä?ä¸èƒ½?¼ç­&#10;?¥å¸«C ä¸èƒ½???å¤œç­&#10;?¥å¸«F ?±ä??ºå?æ©Ÿå?"></textarea>
+      <label>?ï¿½ï¿½??ï¿½åˆ¶ï¼ˆï¿½?è¡Œï¿½?æ¢ï¿½?</label>
+      <textarea id="constraintsInput" rows="5" style="width: 600px;" placeholder="ä¾‹ï¿½?ï¿½?#10;?ï¿½å¸«A ?ï¿½ï¿½?ä¸èƒ½?ï¿½ç­&#10;?ï¿½å¸«C ä¸èƒ½???å¤œç­&#10;?ï¿½å¸«F ?ï¿½ï¿½??ï¿½ï¿½?æ©Ÿï¿½?"></textarea>
     </div>
   </div>
 
   <div style="margin-top: 10px;">
-    <button class="btn-primary" onclick="applySettings()">å¥—ç”¨è¨­å?ä¸¦é???/button>
-    <button class="btn-secondary" onclick="saveSettings()">?’¾ ?²å?è¨­å?</button>
-    <button class="btn-secondary" onclick="loadSettings()">?? è¼‰å…¥è¨­å?</button>
+    <button class="btn-primary" onclick="applySettings()">å¥—ç”¨è¨­ï¿½?ä¸¦ï¿½???/button>
+    <button class="btn-secondary" onclick="saveSettings()">?ï¿½ï¿½ ?ï¿½ï¿½?è¨­ï¿½?</button>
+    <button class="btn-secondary" onclick="loadSettings()">?? è¼‰å…¥è¨­ï¿½?</button>
   </div>
 </div>
 
 <!-- Pharmacist List -->
 <div class="pharmacist-list">
-  <h3>?‘¥ ?¥å¸«?å–®ï¼ˆé??Šå¯?æ–°?½å?ï¼?/h3>
+  <h3>?ï¿½ï¿½ ?ï¿½å¸«?ï¿½å–®ï¼ˆï¿½??ï¿½å¯?ï¿½æ–°?ï¿½ï¿½?ï¿½?/h3>
   <div id="pharmacistTags" class="pharmacist-tags"></div>
   <div style="margin-top: 10px;">
-    <button class="btn-secondary" onclick="renamePharmacist()">?ï? ?æ–°?½å??¥å¸«</button>
+    <button class="btn-secondary" onclick="renamePharmacist()">?ï¿½ï¿½? ?ï¿½æ–°?ï¿½ï¿½??ï¿½å¸«</button>
   </div>
 </div>
 
 <!-- Toolbar -->
 <div class="toolbar">
-  <button class="btn-success" onclick="autoGenerate()">???ªå??’ç­</button>
-  <button class="btn-primary" onclick="clearSchedule()">??ï¸?æ¸…ç©º?­è¡¨</button>
-  <button class="btn-warning" onclick="checkConflicts()">?? æª¢æŸ¥è¡ç?</button>
-  <button class="btn-secondary" onclick="exportCSV()">?? ?¯å‡º CSV</button>
-  <button class="btn-secondary" onclick="exportJSON()">?’¾ ?¯å‡º JSON</button>
-  <button class="btn-secondary" onclick="importJSON()">?? ?¯å…¥ JSON</button>
-  <button class="copy-btn" onclick="copyToClipboard()">?? è¤‡è£½?­è¡¨?‡å?</button>
-  <span id="copyStatus">??å·²è?è£?/span>
+  <button class="btn-success" onclick="autoGenerate()">???ï¿½ï¿½??ï¿½ç­</button>
+  <button class="btn-primary" onclick="clearSchedule()">??ï¿½?æ¸…ç©º?ï¿½è¡¨</button>
+  <button class="btn-warning" onclick="checkConflicts()">?? æª¢æŸ¥è¡ï¿½?</button>
+  <button class="btn-secondary" onclick="exportCSV()">?? ?ï¿½å‡º CSV</button>
+  <button class="btn-secondary" onclick="exportJSON()">?ï¿½ï¿½ ?ï¿½å‡º JSON</button>
+  <button class="btn-secondary" onclick="importJSON()">?? ?ï¿½å…¥ JSON</button>
+  <button class="copy-btn" onclick="copyToClipboard()">?? è¤‡è£½?ï¿½è¡¨?ï¿½ï¿½?</button>
+  <span id="copyStatus">??å·²ï¿½?ï¿½?/span>
 </div>
 
 <!-- Week Navigation -->
 <div class="week-nav">
-  <button onclick="changeWeek(-1)">?€ ä¸Šä???/button>
+  <button onclick="changeWeek(-1)">?ï¿½ ä¸Šï¿½???/button>
   <span id="weekLabel"></span>
-  <button onclick="changeWeek(1)">ä¸‹ä?????/button>
+  <button onclick="changeWeek(1)">ä¸‹ï¿½?????/button>
 </div>
 <div class="week-selector" id="weekSelector"></div>
 <div class="month-jumper" id="monthJumper"></div>
 
 <!-- Conflict List -->
 <div class="conflict-list" id="conflictList">
-  <h4>? ï? è¡ç?è­¦å?</h4>
+  <h4>?ï¿½ï¿½? è¡ï¿½?è­¦ï¿½?</h4>
   <ul id="conflictItems"></ul>
 </div>
 
@@ -225,43 +225,43 @@ td.empty { color: #bbb; font-style: italic; }
 
 <!-- Notes -->
 <div class="settings-panel">
-  <h3>?? ?™è¨»</h3>
-  <textarea class="notes-area" id="notesArea" placeholder="?¨é€™è£¡å¯«ä??™è¨»..."></textarea>
+  <h3>?? ?ï¿½è¨»</h3>
+  <textarea class="notes-area" id="notesArea" placeholder="?ï¿½é€™è£¡å¯«ï¿½??ï¿½è¨»..."></textarea>
 </div>
 
 <!-- Edit Modal -->
 <div class="modal-overlay" id="editModal">
   <div class="modal">
-    <h3 id="modalTitle">ä¿®æ”¹?­è¡¨</h3>
+    <h3 id="modalTitle">ä¿®æ”¹?ï¿½è¡¨</h3>
     <p id="modalInfo" style="margin-bottom: 12px; color: #555; font-size: 14px;"></p>
     <select id="modalSelect"></select>
     <div class="modal-buttons">
-      <button class="btn-cancel" onclick="closeModal()">?–æ?</button>
-      <button class="btn-confirm" onclick="confirmEdit()">ç¢ºè?</button>
+      <button class="btn-cancel" onclick="closeModal()">?ï¿½ï¿½?</button>
+      <button class="btn-confirm" onclick="confirmEdit()">ç¢ºï¿½?</button>
     </div>
   </div>
 </div>
 
 <script>
-// ======== è³‡æ?çµæ? ========
-let pharmacists = ['?¥å¸«A','?¥å¸«B','?¥å¸«C','?¥å¸«D','?¥å¸«E','?¥å¸«F','?¥å¸«G','?¥å¸«H','?¥å¸«I','?¥å¸«J','?¥å¸«K'];
-let shiftOrder = ['æ©Ÿå?','ç£¨ç?','å¤?','æ³¡è£½2','??','?…æˆ¿','å¤?','èª?','å¤?','?¼è—¥','å¤?'];
+// ======== è³‡ï¿½?çµï¿½? ========
+let pharmacists = ['?ï¿½å¸«A','?ï¿½å¸«B','?ï¿½å¸«C','?ï¿½å¸«D','?ï¿½å¸«E','?ï¿½å¸«F','?ï¿½å¸«G','?ï¿½å¸«H','?ï¿½å¸«I','?ï¿½å¸«J','?ï¿½å¸«K'];
+let shiftOrder = ['æ©Ÿï¿½?','ç£¨ï¿½?','ï¿½?','æ³¡è£½2','??','?ï¿½æˆ¿','ï¿½?','ï¿½?','ï¿½?','?ï¿½è—¥','ï¿½?'];
 let constraints = [];
-let schedule = {}; // { 'YYYY-MM-DD': { 'æ©Ÿå?': '?¥å¸«A', 'ç£¨ç?': '?¥å¸«B', ... } }
+let schedule = {}; // { 'YYYY-MM-DD': { 'æ©Ÿï¿½?': '?ï¿½å¸«A', 'ç£¨ï¿½?': '?ï¿½å¸«B', ... } }
 let weekCount = 4;
 let startDateStr = '';
 let currentWeek = 0;
 let editingCell = null;
 let currentView = 'pharmacist'; // 'pharmacist' or 'shift'
 
-// ?­åˆ¥é¡è‰²
+// ?ï¿½åˆ¥é¡è‰²
 const shiftColors = {
-  'æ©Ÿå?': '#3498db', 'ç£¨ç?': '#e67e22', 'å¤?': '#8e44ad', 'æ³¡è£½2': '#1abc9c',
-  '??': '#2ecc71', '?…æˆ¿': '#e74c3c', 'å¤?': '#9b59b6', 'èª?': '#f39c12',
-  'å¤?': '#7f3f98', '?¼è—¥': '#16a085', 'å¤?': '#6c3483'
+  'æ©Ÿï¿½?': '#3498db', 'ç£¨ï¿½?': '#e67e22', 'ï¿½?': '#8e44ad', 'æ³¡è£½2': '#1abc9c',
+  '??': '#2ecc71', '?ï¿½æˆ¿': '#e74c3c', 'ï¿½?': '#9b59b6', 'ï¿½?': '#f39c12',
+  'ï¿½?': '#7f3f98', '?ï¿½è—¥': '#16a085', 'ï¿½?': '#6c3483'
 };
 
-// ======== ?å???========
+// ======== ?ï¿½ï¿½???========
 function init() {
   const today = new Date();
   const day = today.getDay();
@@ -295,7 +295,7 @@ function addDays(dateStr, n) {
   return formatDate(d);
 }
 
-// ======== è¦–è??‡æ? ========
+// ======== è¦–ï¿½??ï¿½ï¿½? ========
 function switchView(view) {
   currentView = view;
   document.getElementById('viewByPharmacist').classList.toggle('active', view === 'pharmacist');
@@ -303,7 +303,7 @@ function switchView(view) {
   renderTable();
 }
 
-// ======== æ¸²æ? ========
+// ======== æ¸²ï¿½? ========
 function renderPharmacists() {
   const container = document.getElementById('pharmacistTags');
   container.innerHTML = '';
@@ -331,7 +331,7 @@ function renderShiftColors() {
 function renderWeekSelector() {
   const container = document.getElementById('weekSelector');
   container.innerHTML = '';
-  // ?ªé¡¯ç¤ºç•¶?é€±å?å¾??±ç??‰é?ï¼Œé¿?å¤ªå¤šæ???  const showRange = 5;
+  // ?ï¿½é¡¯ç¤ºç•¶?ï¿½é€±ï¿½?ï¿½??ï¿½ï¿½??ï¿½ï¿½?ï¼Œé¿?ï¿½å¤ªå¤šï¿½???  const showRange = 5;
   const startW = Math.max(0, currentWeek - showRange);
   const endW = Math.min(weekCount - 1, currentWeek + showRange);
   for (let w = startW; w <= endW; w++) {
@@ -339,7 +339,7 @@ function renderWeekSelector() {
     tab.className = 'week-tab' + (w === currentWeek ? ' active' : '');
     const wkStart = addDays(startDateStr, w * 7);
     const wkEnd = addDays(wkStart, 6);
-    tab.textContent = `ç¬?{w + 1}??(${wkStart.slice(5)}~${wkEnd.slice(5)})`;
+    tab.textContent = `ï¿½?{w + 1}??(${wkStart.slice(5)}~${wkEnd.slice(5)})`;
     tab.onclick = () => { currentWeek = w; renderWeekSelector(); renderWeekLabel(); renderTable(); };
     container.appendChild(tab);
   }
@@ -350,7 +350,7 @@ function renderWeekLabel() {
   const label = document.getElementById('weekLabel');
   const wkStart = addDays(startDateStr, currentWeek * 7);
   const wkEnd = addDays(wkStart, 6);
-  label.textContent = `ç¬?{currentWeek + 1}??/ ${weekCount}??(${wkStart} ~ ${wkEnd})`;
+  label.textContent = `ï¿½?{currentWeek + 1}??/ ${weekCount}??(${wkStart} ~ ${wkEnd})`;
 }
 
 function changeWeek(delta) {
@@ -365,7 +365,7 @@ function changeWeek(delta) {
 function renderMonthJumper() {
   const container = document.getElementById('monthJumper');
   container.innerHTML = '';
-  // ?¹æ? startDate ??weekCount è¨ˆç?æ¶µè??„æ?ä»?  const start = parseDate(startDateStr);
+  // ?ï¿½ï¿½? startDate ??weekCount è¨ˆï¿½?æ¶µï¿½??ï¿½ï¿½?ï¿½?  const start = parseDate(startDateStr);
   const end = new Date(start);
   end.setDate(end.getDate() + weekCount * 7);
   const months = [];
@@ -374,7 +374,7 @@ function renderMonthJumper() {
     months.push({ y: cur.getFullYear(), m: cur.getMonth() });
     cur.setMonth(cur.getMonth() + 1);
   }
-  // ?¶å?é¡¯ç¤º?±ç??ˆä»½
+  // ?ï¿½ï¿½?é¡¯ç¤º?ï¿½ï¿½??ï¿½ä»½
   const wkStart = parseDate(addDays(startDateStr, currentWeek * 7));
   const currentYM = `${wkStart.getFullYear()}-${String(wkStart.getMonth()+1).padStart(2,'0')}`;
   
@@ -384,8 +384,8 @@ function renderMonthJumper() {
     tab.className = 'month-tab' + (ym === currentYM ? ' current-month' : '');
     tab.textContent = `${y}/${m+1}`;
     tab.onclick = () => {
-      // è·³åˆ°?…å«æ­¤æ?ä»½ç¬¬1å¤©ç???      const targetDate = new Date(y, m, 1);
-      // ?¾åˆ°?€?¥è??„é€?      const dayDiff = Math.floor((targetDate - parseDate(startDateStr)) / (1000*60*60*24));
+      // è·³åˆ°?ï¿½å«æ­¤ï¿½?ä»½ç¬¬1å¤©ï¿½???      const targetDate = new Date(y, m, 1);
+      // ?ï¿½åˆ°?ï¿½?ï¿½ï¿½??ï¿½ï¿½?      const dayDiff = Math.floor((targetDate - parseDate(startDateStr)) / (1000*60*60*24));
       let targetWeek = Math.floor(dayDiff / 7);
       if (targetWeek < 0) targetWeek = 0;
       if (targetWeek >= weekCount) targetWeek = weekCount - 1;
@@ -399,7 +399,7 @@ function renderMonthJumper() {
 }
 
 function getDayName(dateStr) {
-  const days = ['?±æ—¥','?±ä?','?±ä?','?±ä?','?±å?','?±ä?','?±å…­'];
+  const days = ['?ï¿½æ—¥','?ï¿½ï¿½?','?ï¿½ï¿½?','?ï¿½ï¿½?','?ï¿½ï¿½?','?ï¿½ï¿½?','?ï¿½å…­'];
   return days[parseDate(dateStr).getDay()];
 }
 
@@ -412,12 +412,12 @@ function renderTable() {
   updateStats();
 }
 
-// ä»¥è—¥å¸«ç‚ºä¸»é?ï¼šè?=?¥å¸«ï¼Œå?=?¥æ?ï¼Œæ ¼å­??­åˆ¥
+// ä»¥è—¥å¸«ç‚ºä¸»ï¿½?ï¼šï¿½?=?ï¿½å¸«ï¼Œï¿½?=?ï¿½ï¿½?ï¼Œæ ¼ï¿½??ï¿½åˆ¥
 function renderTableByPharmacist() {
   const head = document.getElementById('tableHead');
   const body = document.getElementById('tableBody');
   
-  let headHTML = '<tr><th>?¥å¸« ï¼??¥æ?</th>';
+  let headHTML = '<tr><th>?ï¿½å¸« ï¿½??ï¿½ï¿½?</th>';
   const wkStart = addDays(startDateStr, currentWeek * 7);
   for (let i = 0; i < 7; i++) {
     const ds = addDays(wkStart, i);
@@ -452,12 +452,12 @@ function renderTableByPharmacist() {
   });
 }
 
-// ä»¥ç­?¥ç‚ºä¸»é?ï¼šè?=?­åˆ¥ï¼Œå?=?¥æ?ï¼Œæ ¼å­??¥å¸«
+// ä»¥ç­?ï¿½ç‚ºä¸»ï¿½?ï¼šï¿½?=?ï¿½åˆ¥ï¼Œï¿½?=?ï¿½ï¿½?ï¼Œæ ¼ï¿½??ï¿½å¸«
 function renderTableByShift() {
   const head = document.getElementById('tableHead');
   const body = document.getElementById('tableBody');
   
-  let headHTML = '<tr><th>?­åˆ¥ ï¼??¥æ?</th>';
+  let headHTML = '<tr><th>?ï¿½åˆ¥ ï¿½??ï¿½ï¿½?</th>';
   const wkStart = addDays(startDateStr, currentWeek * 7);
   for (let i = 0; i < 7; i++) {
     const ds = addDays(wkStart, i);
@@ -482,7 +482,7 @@ function renderTableByShift() {
   });
 }
 
-// ======== ?ªå??’ç­ ========
+// ======== ?ï¿½ï¿½??ï¿½ç­ ========
 function autoGenerate() {
   parseSettingsFromInputs();
   schedule = {};
@@ -495,7 +495,7 @@ function autoGenerate() {
   });
   
   if (activePharmacists.length < shiftOrder.length) {
-    alert(`? ï? ?Ÿç”¨?¥å¸«??(${activePharmacists.length}) å°‘æ–¼?­åˆ¥??(${shiftOrder.length})ï¼Œç„¡æ³•æ??­ï?\nè«‹è‡³å°‘å???${shiftOrder.length} ä½è—¥å¸«ã€‚`);
+    alert(`?ï¿½ï¿½? ?ï¿½ç”¨?ï¿½å¸«??(${activePharmacists.length}) å°‘æ–¼?ï¿½åˆ¥??(${shiftOrder.length})ï¼Œç„¡æ³•ï¿½??ï¿½ï¿½?\nè«‹è‡³å°‘ï¿½???${shiftOrder.length} ä½è—¥å¸«ã€‚`);
     return;
   }
   
@@ -506,8 +506,8 @@ function autoGenerate() {
     if (startIdx < 0) startIdx = 0;
   }
   
-  // æ¯é€±è¼ªèª¿ï??¥å¸«A?¬é€±æ??ç­ï¼Œä??±æ??†å??„ä?ä¸€?‹ç­
-  // ?­åˆ¥ index ?¨é€±æ•¸ +1ï¼Œæ?ä»¥è—¥å¸?index ?¨é€±æ•¸ -1
+  // æ¯é€±è¼ªèª¿ï¿½??ï¿½å¸«A?ï¿½é€±ï¿½??ï¿½ç­ï¼Œï¿½??ï¿½ï¿½??ï¿½ï¿½??ï¿½ï¿½?ä¸€?ï¿½ç­
+  // ?ï¿½åˆ¥ index ?ï¿½é€±æ•¸ +1ï¼Œï¿½?ä»¥è—¥ï¿½?index ?ï¿½é€±æ•¸ -1
   const startShiftIdx = parseInt(document.getElementById('startShiftSelect').value) || 0;
   for (let w = 0; w < weekCount; w++) {
     for (let d = 0; d < 7; d++) {
@@ -545,23 +545,23 @@ function violatesConstraint(dateStr, shift, pharmacist, daySchedule) {
     }
     if (c.type === 'no_shift' && c.pharmacist === pharmacist && c.shift === shift) return true;
     if (c.type === 'no_date' && c.pharmacist === pharmacist && c.date === dateStr) return true;
-    if (c.type === 'no_consecutive_night' && shift.includes('å¤?)) {
+    if (c.type === 'no_consecutive_night' && shift.includes('ï¿½?)) {
       const yesterday = addDays(dateStr, -1);
       if (schedule[yesterday]) {
         for (const s of shiftOrder) {
-          if (s.includes('å¤?) && schedule[yesterday][s] === pharmacist) return true;
+          if (s.includes('ï¿½?) && schedule[yesterday][s] === pharmacist) return true;
         }
       }
     }
   }
-  // ?Œäºº?Œå¤©ä¸èƒ½?©ç­
+  // ?ï¿½äºº?ï¿½å¤©ä¸èƒ½?ï¿½ç­
   for (const s of shiftOrder) {
     if (s !== shift && daySchedule[s] === pharmacist) return true;
   }
   return false;
 }
 
-// ======== è¡ç?æª¢æŸ¥ ========
+// ======== è¡ï¿½?æª¢æŸ¥ ========
 function checkCellConflict(dateStr, shift, pharmacist) {
   if (!pharmacist) return false;
   const daySchedule = schedule[dateStr];
@@ -576,11 +576,11 @@ function checkCellConflict(dateStr, shift, pharmacist) {
     if (c.type === 'no_day' && c.day === getDayName(dateStr)) return true;
     if (c.type === 'no_shift' && c.shift === shift) return true;
     if (c.type === 'no_date' && c.date === dateStr) return true;
-    if (c.type === 'no_consecutive_night' && shift.includes('å¤?)) {
+    if (c.type === 'no_consecutive_night' && shift.includes('ï¿½?)) {
       const yesterday = addDays(dateStr, -1);
       if (schedule[yesterday]) {
         for (const s of shiftOrder) {
-          if (s.includes('å¤?) && schedule[yesterday][s] === pharmacist) return true;
+          if (s.includes('ï¿½?) && schedule[yesterday][s] === pharmacist) return true;
         }
       }
     }
@@ -614,7 +614,7 @@ function checkConflicts() {
   return conflicts.length;
 }
 
-// ======== ç·¨è¼¯ï¼ˆè—¥å¸«è?è§’ï?========
+// ======== ç·¨è¼¯ï¼ˆè—¥å¸«ï¿½?è§’ï¿½?========
 function openEditModal(dateStr, pharmacist) {
   editingCell = { dateStr, pharmacist, mode: 'pharmacist' };
   const modal = document.getElementById('editModal');
@@ -629,8 +629,8 @@ function openEditModal(dateStr, pharmacist) {
     }
   }
   
-  title.textContent = `ä¿®æ”¹ ${getDayName(dateStr)} ${dateStr} ??{pharmacist}?ç??­åˆ¥`;
-  info.textContent = `?®å?ï¼?{currentShift || 'ç©?}`;
+  title.textContent = `ä¿®æ”¹ ${getDayName(dateStr)} ${dateStr} ??{pharmacist}?ï¿½ï¿½??ï¿½åˆ¥`;
+  info.textContent = `?ï¿½ï¿½?ï¿½?{currentShift || 'ï¿½?}`;
   
   select.innerHTML = '<option value="">??ç©ºç­ ??/option>' + 
     shiftOrder.map(s => `<option value="${s}" ${s===currentShift?'selected':''}>${s}</option>`).join('');
@@ -638,7 +638,7 @@ function openEditModal(dateStr, pharmacist) {
   modal.classList.add('show');
 }
 
-// ======== ç·¨è¼¯ï¼ˆç­?¥è?è§’ï?========
+// ======== ç·¨è¼¯ï¼ˆç­?ï¿½ï¿½?è§’ï¿½?========
 function openEditModalShift(dateStr, shift) {
   editingCell = { dateStr, shift, mode: 'shift' };
   const modal = document.getElementById('editModal');
@@ -647,8 +647,8 @@ function openEditModalShift(dateStr, shift) {
   const select = document.getElementById('modalSelect');
   
   const current = schedule[dateStr] && schedule[dateStr][shift] ? schedule[dateStr][shift] : '';
-  title.textContent = `ä¿®æ”¹ ${getDayName(dateStr)} ${dateStr} ?„ã€?{shift}?`;
-  info.textContent = `?®å?ï¼?{current || 'ç©?}`;
+  title.textContent = `ä¿®æ”¹ ${getDayName(dateStr)} ${dateStr} ?ï¿½ï¿½?{shift}?ï¿½`;
+  info.textContent = `?ï¿½ï¿½?ï¿½?{current || 'ï¿½?}`;
   
   select.innerHTML = '<option value="">??ç©ºç­ ??/option>' + 
     pharmacists.map(p => `<option value="${p}" ${p===current?'selected':''}>${p}</option>`).join('');
@@ -669,10 +669,10 @@ function confirmEdit() {
   if (editingCell.mode === 'pharmacist') {
     const { dateStr, pharmacist } = editingCell;
     if (!schedule[dateStr]) schedule[dateStr] = {};
-    // æ¸…é™¤æ­¤è—¥å¸«åœ¨æ­¤æ—¥?Ÿç??Šç­??    for (const s of shiftOrder) {
+    // æ¸…é™¤æ­¤è—¥å¸«åœ¨æ­¤æ—¥?ï¿½ï¿½??ï¿½ç­??    for (const s of shiftOrder) {
       if (schedule[dateStr][s] === pharmacist) schedule[dateStr][s] = '';
     }
-    // è¨­å??°ç­??    if (value) schedule[dateStr][value] = pharmacist;
+    // è¨­ï¿½??ï¿½ç­??    if (value) schedule[dateStr][value] = pharmacist;
   } else {
     const { dateStr, shift } = editingCell;
     if (!schedule[dateStr]) schedule[dateStr] = {};
@@ -684,7 +684,7 @@ function confirmEdit() {
   checkConflicts();
 }
 
-// ======== è¨­å? ========
+// ======== è¨­ï¿½? ========
 function parseSettingsFromInputs() {
   const orderStr = document.getElementById('shiftOrderInput').value.trim();
   if (orderStr) {
@@ -715,13 +715,13 @@ function parseConstraints(text) {
     const pharmacist = parts[0];
     const rest = parts.slice(1).join(' ');
     
-    let m = rest.match(/??[?¥ä?äºŒä??›ä??­])ä¸èƒ½(?:?¼ç­|?’ç­)/);
+    let m = rest.match(/??[?ï¿½ï¿½?äºŒï¿½??ï¿½ï¿½??ï¿½])ä¸èƒ½(?:?ï¿½ç­|?ï¿½ç­)/);
     if (m) {
-      const dayMap = {'??:'?±æ—¥','ä¸€':'?±ä?','äº?:'?±ä?','ä¸?:'?±ä?','??:'?±å?','äº?:'?±ä?','??:'?±å…­'};
+      const dayMap = {'??:'?ï¿½æ—¥','ä¸€':'?ï¿½ï¿½?','ï¿½?:'?ï¿½ï¿½?','ï¿½?:'?ï¿½ï¿½?','??:'?ï¿½ï¿½?','ï¿½?:'?ï¿½ï¿½?','??:'?ï¿½å…­'};
       result.push({type:'no_day', pharmacist, day: dayMap[m[1]], text: line});
       continue;
     }
-    m = rest.match(/ä¸èƒ½(?:?’|??(.+)/);
+    m = rest.match(/ä¸èƒ½(?:?ï¿½|??(.+)/);
     if (m) {
       const shiftName = m[1].trim();
       if (shiftOrder.includes(shiftName)) {
@@ -734,11 +734,11 @@ function parseConstraints(text) {
       result.push({type:'no_date', pharmacist, date: m[1], text: line});
       continue;
     }
-    if (rest.includes('ä¸èƒ½???å¤œç­') || rest.includes('ä¸é€??')) {
+    if (rest.includes('ä¸èƒ½???å¤œç­') || rest.includes('ä¸ï¿½??')) {
       result.push({type:'no_consecutive_night', pharmacist, text: line});
       continue;
     }
-    m = rest.match(/(?:?ºå?|æ°¸é?)(.+)/);
+    m = rest.match(/(?:?ï¿½ï¿½?|æ°¸ï¿½?)(.+)/);
     if (m) {
       const shiftName = m[1].trim();
       if (shiftOrder.includes(shiftName)) {
@@ -770,12 +770,12 @@ function saveSettings() {
     schedule, notes: document.getElementById('notesArea').value
   };
   localStorage.setItem('pharmacistSchedule', JSON.stringify(data));
-  alert('??è¨­å?å·²å„²å­˜åˆ°?è¦½??);
+  alert('??è¨­ï¿½?å·²å„²å­˜åˆ°?ï¿½è¦½??);
 }
 
 function loadSettings() {
   const saved = localStorage.getItem('pharmacistSchedule');
-  if (!saved) { alert('? ï? ?¾ä??°å·²?²å??„è¨­å®?); return; }
+  if (!saved) { alert('?ï¿½ï¿½? ?ï¿½ï¿½??ï¿½å·²?ï¿½ï¿½??ï¿½è¨­ï¿½?); return; }
   const data = JSON.parse(saved);
   pharmacists = data.pharmacists || pharmacists;
   shiftOrder = data.shiftOrder || shiftOrder;
@@ -783,7 +783,7 @@ function loadSettings() {
   document.getElementById('constraintsInput').value = data.constraints || '';
   document.getElementById('startDate').value = data.startDate || startDateStr;
   document.getElementById('weekCount').value = data.weekCount || 4;
-  document.getElementById('firstPharmacist').value = data.firstPharmacist || '?¥å¸«A';
+  document.getElementById('firstPharmacist').value = data.firstPharmacist || '?ï¿½å¸«A';
   if (data.startShift !== undefined) document.getElementById('startShiftSelect').value = data.startShift;
   document.getElementById('shiftOrderInput').value = shiftOrder.join(',');
   document.getElementById('notesArea').value = data.notes || '';
@@ -795,24 +795,24 @@ function loadSettings() {
   renderWeekSelector();
   renderWeekLabel();
   renderTable();
-  alert('??è¨­å?å·²è???);
+  alert('??è¨­ï¿½?å·²ï¿½???);
 }
 
 // ======== æ¸…ç©º ========
 function clearSchedule() {
-  if (!confirm('ç¢ºå?è¦æ?ç©ºæ•´?‹ç­è¡¨å?ï¼?)) return;
+  if (!confirm('ç¢ºï¿½?è¦ï¿½?ç©ºæ•´?ï¿½ç­è¡¨ï¿½?ï¿½?)) return;
   schedule = {};
   renderTable();
   document.getElementById('conflictList').classList.remove('show');
 }
 
-// ======== ?æ–°?½å? ========
+// ======== ?ï¿½æ–°?ï¿½ï¿½? ========
 function renamePharmacist() {
-  const index = prompt('è¦é??°å‘½?ç¬¬å¹¾ä??¥å¸«ï¼Ÿï?1-' + pharmacists.length + 'ï¼?);
+  const index = prompt('è¦ï¿½??ï¿½å‘½?ï¿½ç¬¬å¹¾ï¿½??ï¿½å¸«ï¼Ÿï¿½?1-' + pharmacists.length + 'ï¿½?);
   if (!index) return;
   const i = parseInt(index) - 1;
-  if (i < 0 || i >= pharmacists.length) { alert('ç·¨è??¯èª¤'); return; }
-  const newName = prompt(`?®å??ç¨±ï¼?{pharmacists[i]}\nè«‹è¼¸?¥æ–°?ç¨±ï¼š`);
+  if (i < 0 || i >= pharmacists.length) { alert('ç·¨ï¿½??ï¿½èª¤'); return; }
+  const newName = prompt(`?ï¿½ï¿½??ï¿½ç¨±ï¿½?{pharmacists[i]}\nè«‹è¼¸?ï¿½æ–°?ï¿½ç¨±ï¼š`);
   if (!newName) return;
   Object.keys(schedule).forEach(ds => {
     if (!schedule[ds]) return;
@@ -826,7 +826,7 @@ function renamePharmacist() {
   renderTable();
 }
 
-// ======== çµ±è? ========
+// ======== çµ±ï¿½? ========
 function updateStats() {
   const counts = {};
   pharmacists.forEach(p => counts[p] = 0);
@@ -836,10 +836,10 @@ function updateStats() {
   });
 }
 
-// ======== ?¯å‡º ========
+// ======== ?ï¿½å‡º ========
 function exportCSV() {
   const wkStart = addDays(startDateStr, currentWeek * 7);
-  let csv = currentView === 'pharmacist' ? '?¥å¸«' : '?­åˆ¥';
+  let csv = currentView === 'pharmacist' ? '?ï¿½å¸«' : '?ï¿½åˆ¥';
   for (let i = 0; i < 7; i++) {
     const ds = addDays(wkStart, i);
     csv += `,${ds} ${getDayName(ds)}`;
@@ -872,7 +872,7 @@ function exportCSV() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `?¥å¸«?­è¡¨_ç¬?{currentWeek+1}??csv`;
+  a.download = `?ï¿½å¸«?ï¿½è¡¨_ï¿½?{currentWeek+1}??csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -891,7 +891,7 @@ function exportJSON() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `?¥å¸«?­è¡¨_${startDateStr}.json`;
+  a.download = `?ï¿½å¸«?ï¿½è¡¨_${startDateStr}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -924,7 +924,7 @@ function importJSON() {
       renderShiftColors();
       renderWeekSelector();
       renderTable();
-      alert('???¯å…¥?å?');
+      alert('???ï¿½å…¥?ï¿½ï¿½?');
     };
     reader.readAsText(file);
   };
@@ -932,13 +932,13 @@ function importJSON() {
 }
 
 function copyToClipboard() {
-  let text = '?? ?¥å¸«?¼ç­?­è¡¨\n';
+  let text = '?? ?ï¿½å¸«?ï¿½ç­?ï¿½è¡¨\n';
   for (let w = 0; w < weekCount; w++) {
     const wkStart = addDays(startDateStr, w * 7);
-    text += `\n=== ç¬?{w+1}??(${wkStart} ~ ${addDays(wkStart, 6)}) ===\n`;
+    text += `\n=== ï¿½?{w+1}??(${wkStart} ~ ${addDays(wkStart, 6)}) ===\n`;
     
     if (currentView === 'pharmacist') {
-      text += '?¥å¸«'.padEnd(8);
+      text += '?ï¿½å¸«'.padEnd(8);
       for (let i = 0; i < 7; i++) { const ds = addDays(wkStart, i); text += `\t${getDayName(ds)}`; }
       text += '\n';
       pharmacists.forEach((p, pIdx) => {
@@ -952,7 +952,7 @@ function copyToClipboard() {
         text += '\n';
       });
     } else {
-      text += '?­åˆ¥'.padEnd(8);
+      text += '?ï¿½åˆ¥'.padEnd(8);
       for (let i = 0; i < 7; i++) { const ds = addDays(wkStart, i); text += `\t${getDayName(ds)}`; }
       text += '\n';
       shiftOrder.forEach(shift => {
@@ -973,7 +973,7 @@ function copyToClipboard() {
   });
 }
 
-// ======== ?Ÿå? ========
+// ======== ?ï¿½ï¿½? ========
 init();
 </script>
 
